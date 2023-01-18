@@ -1,11 +1,13 @@
+import { Route, Routes } from "react-router";
 import "./App.css";
-import NavBar from "./components/NavBar";
+
 import Register from "./components/register/Register";
 function App() {
   return (
-    <div className="App pt-19">
-      <NavBar />
-      {/* <Register /> */}
+    <div className="App pt-16">
+      <Routes>
+        <Route path="/register" element={<Register />} />
+      </Routes>
     </div>
   );
 }
