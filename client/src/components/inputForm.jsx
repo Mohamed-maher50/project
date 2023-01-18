@@ -1,6 +1,6 @@
 import React from "react";
 
-function InputForm({ type, value, label, name, id }) {
+function InputForm({ type, value, label, name, id, handler }) {
   return (
     <>
       <label
@@ -11,6 +11,7 @@ function InputForm({ type, value, label, name, id }) {
       </label>
       <input
         id={id}
+        onChange={(e) => handler(e)}
         type={type}
         name={name}
         placeholder={label}
