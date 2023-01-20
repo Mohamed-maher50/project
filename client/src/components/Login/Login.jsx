@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -6,21 +7,21 @@ import InputForm from "../inputForm";
 const inputs = [
   {
     id: "1",
-    name: "Email",
-    label: "Email",
+    name: "email",
+    label: "email",
     type: "email",
   },
   {
     id: "2",
-    name: "Password",
-    label: "Password",
+    name: "password",
+    label: "password",
     type: "password",
   },
 ];
 function Login() {
   const [formData, setFormData] = useState({
-    Email: "",
-    Password: "",
+    email: "",
+    password: "",
   });
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -28,21 +29,41 @@ function Login() {
       [e.target.name]: e.target.value,
     }));
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let result = validationForm("login", formData);
 
     if (result == true) {
-      toast("👌 success", {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
-        type: "success",
-      });
+      try {
+        const { data } = await axios.post(
+          "http://localhost:4000/auth/login",
+          formData
+        );
+        localStorage.setItem("userInfo", data);
+        toast("👌 success", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "light",
+          type: "success",
+        });
+      } catch (error) {
+        if (error.response.status == 401) {
+          toast(error.response.data, {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "light",
+            type: "error",
+          });
+        }
+      }
     } else {
       result.forEach((errMsg) => {
         toast(errMsg, {

@@ -3,63 +3,83 @@ import InputForm from "../inputForm";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { validationForm } from "../../validate/ValidateForm";
+import axios from "axios";
 const inputs = [
   {
     id: "1",
-    name: "FirstName",
+    name: "firstName",
     label: "First Name",
     type: "text",
   },
   {
     id: "2",
-    name: "LastName",
+    name: "lastName",
     label: "last Name",
     type: "text",
   },
   {
     id: "3",
-    name: "Email",
-    label: "Email",
+    name: "email",
+    label: "email",
     type: "email",
   },
   {
     id: "4",
-    name: "Password",
-    label: "Password",
+    name: "password",
+    label: "password",
     type: "password",
   },
   {
     id: "5",
     name: "confirmPassword",
-    label: "confirm Password",
+    label: "confirm password",
     type: "password",
   },
 ];
 
 function Register() {
   const [formData, setFormData] = useState({
-    FirstName: "",
-    LastName: "",
-    Email: "",
-    Password: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
     confirmPassword: "",
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let result = validationForm("register", formData);
-
     if (result == true) {
-      toast("👌 success", {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
-        type: "success",
-      });
+      try {
+        const { data } = await axios.post(
+          "http://localhost:4000/auth/register",
+          formData
+        );
+        localStorage.setItem("userInfo", data);
+        toast("👌 success", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "light",
+          type: "success",
+        });
+      } catch (error) {
+        if (error.response.status == 401) {
+          toast(error.response.data, {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "light",
+            type: "error",
+          });
+        }
+      }
     } else {
       result.forEach((errMsg) => {
         toast(errMsg, {
