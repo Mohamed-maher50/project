@@ -1,7 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body,button,input{
-    font-family: 'Josefin Sans';
+body,
+button,
+input {
+  font-family: "Josefin Sans";
+}
+@layer components {
+  .main-btn {
+    transition: 0.3s ease-in-out;
+    @apply py-2 px-7 bg-[#9d3cff] rounded-full
+      text-white mt-7 font-bold font-Josefin shadow-md;
+  }
+  .outline-btn {
+    transition: 0.5s ease-in-out;
+    @apply py-2 px-7  rounded-full
+    text-white mt-7 font-bold font-Josefin  border-2 border-[#fff];
+  }
+  .outline-btn:hover {
+    background-color: #9d3cff;
+    @apply border-[#ffff];
+  }
+  .main-btn:hover {
+    background-color: aliceblue;
+    color: #9d3cff;
+  }
 }

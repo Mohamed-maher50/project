@@ -80,17 +80,15 @@ function Login() {
     }
   };
   return (
-    <>
+    <div className="h-full flex justify-center items-center bg-[#20023e]">
       <form
-        className="border flex flex-col w-fit mx-auto p-10 pt-14 border-main"
+        className=" flex flex-col w-fit mx-auto p-10 pt-14 border-white border-4"
         onSubmit={handleSubmit}
       >
         {inputs.map((inp) => {
           return <InputForm {...inp} key={inp.id} handler={handleChange} />;
         })}
-        <button className="text-main font-[Josefin] border border-main py-2 transition duration-500 ease-in-out hover:bg-main hover:text-white font-bold text-xl">
-          Submit
-        </button>
+        <button className="main-btn">Submit</button>
       </form>
       <ToastContainer
         position="top-right"
@@ -104,7 +102,7 @@ function Login() {
         pauseOnHover
         theme="dark"
       ></ToastContainer>
-    </>
+    </div>
   );
 }
 

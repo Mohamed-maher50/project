@@ -4,7 +4,7 @@ function InputForm({ type, value, label, name, id, handler }) {
   return (
     <>
       <label
-        className="capitalize font-[Josefin] font-bold border-main"
+        className="capitalize text-white font-Josefin font-bold border-main"
         htmlFor={id}
       >
         {label}
