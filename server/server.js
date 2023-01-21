@@ -3,6 +3,7 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(require("cookie-parser")());
 const cors = require("cors");
+// app.use(require("./errors/errorHandler"));
 app.use(
   cors({
     origin: "http://localhost:3000",

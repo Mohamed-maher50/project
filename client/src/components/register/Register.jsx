@@ -63,7 +63,7 @@ function Register() {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          theme: "light",
+          theme: "dark",
           type: "success",
         });
       } catch (error) {
@@ -75,7 +75,7 @@ function Register() {
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
-            theme: "light",
+            theme: "dark",
             type: "error",
           });
         }
@@ -102,7 +102,7 @@ function Register() {
     }));
   };
   return (
-    <div className="h-full flex justify-center items-center bg-[#20023e] ">
+    <div className="h-full flex justify-center items-center bg-main ">
       <form
         className=" flex flex-col w-fit mx-auto p-10 pt-14 border-4 border-white"
         onSubmit={handleSubmit}
