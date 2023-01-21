@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-function NavBar() {
+function NavBar({ notifcationStatusHandler }) {
   const [Active, setActive] = useState(true);
   const { user } = useSelector((state) => state.user);
   const SubMenu = function () {
@@ -12,6 +12,7 @@ function NavBar() {
           className="rounded-full h-10 p-2 outline-none text-lg grow shadow"
           spellCheck="false"
         />
+
         <span className="rounded-full border-secondary border-2 outline-2 outline-offset-2 outline-none outline-lime-50 overflow-hidden inline-block w-10 h-10 mx-3">
           <img src={user.AvatarUrl} />
         </span>
@@ -20,7 +21,7 @@ function NavBar() {
   };
   return (
     <>
-      <div className="bg-main top-0  w-full  z-20 p-1 flex items-center">
+      <div className="bg-main top-0  w-full relative z-20 p-1 flex items-center">
         <div className="logo flex items-center px-4 grow">
           <img
             src="/images.png"
@@ -31,12 +32,17 @@ function NavBar() {
             can you
           </span>
         </div>
+        <i
+          class={`fa-solid fa-bell text-yellow-400 text-2xl mx-1 cursor-pointer`}
+          onClick={notifcationStatusHandler}
+        ></i>
         <div
           onClick={() => setActive(!Active)}
           className=" cursor-pointer w-12 h-12 flex items-center justify-center rounded-lg bg-[#F8F4EA] text-[#579BB1] lg:hidden"
         >
           <i className="fa fa-bars text-2xl text-main" aria-hidden="true"></i>
         </div>
+
         <div className="hidden lg:flex items-center w-80 ">
           <SubMenu />
         </div>
