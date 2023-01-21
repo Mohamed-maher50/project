@@ -23,6 +23,15 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, "password"],
   },
+  firstVisit: {
+    type: Boolean,
+    default: true,
+  },
+  AvatarUrl: {
+    type: String,
+    default:
+      "https://cdn.pixabay.com/photo/2016/11/18/23/38/child-1837375_960_720.png",
+  },
 });
 
 userSchema.pre("save", async function () {
