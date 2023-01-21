@@ -11,6 +11,7 @@ function NavBar() {
           className="rounded-full h-12 p-3 outline-none text-lg grow"
           spellCheck="false"
         />
+        <i className="fa fa-bars text-2xl"></i>
         <img src="/images.png" className={" rounded-full w-14 h-14 m-1"} />
       </>
     );
