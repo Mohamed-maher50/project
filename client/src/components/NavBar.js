@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 function NavBar({ notifcationStatusHandler }) {
   const [Active, setActive] = useState(true);
   const { user } = useSelector((state) => state.user);
@@ -12,10 +13,11 @@ function NavBar({ notifcationStatusHandler }) {
           className="rounded-full h-10 p-2 outline-none text-lg grow shadow"
           spellCheck="false"
         />
-
-        <span className="rounded-full border-secondary border-2 outline-2 outline-offset-2 outline-none outline-lime-50 overflow-hidden inline-block w-10 h-10 mx-3">
-          <img src={user.AvatarUrl} />
-        </span>
+        <Link to={"/profile"}>
+          <span className="rounded-full cursor-pointer border-secondary border-2 outline-2 outline-offset-2 outline-none outline-lime-50 overflow-hidden inline-block w-10 h-10 mx-3">
+            <img src={user.AvatarUrl} />
+          </span>
+        </Link>
       </>
     );
   };

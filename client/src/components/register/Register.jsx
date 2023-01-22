@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import InputForm from "../inputForm";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { validationForm } from "../../validate/ValidateForm";
-import axios from "axios";
+import { useDispatch } from "react-redux";
+import { registerAuth } from "../../store/user";
+import { displayError } from "../../validate/displayError";
 const inputs = [
   {
     id: "1",
@@ -45,53 +45,20 @@ function Register() {
     password: "",
     confirmPassword: "",
   });
-
+  const dispatch = useDispatch();
   const handleSubmit = async (e) => {
     e.preventDefault();
     let result = validationForm("register", formData);
     if (result == true) {
-      try {
-        const { data } = await axios.post(
-          "http://localhost:4000/auth/register",
-          formData
-        );
-        localStorage.setItem("userInfo", data);
-        toast("👌 success", {
-          position: "bottom-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          theme: "dark",
-          type: "success",
-        });
-      } catch (error) {
-        if (error.response.status == 401) {
-          toast(error.response.data, {
-            position: "bottom-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            theme: "dark",
-            type: "error",
-          });
-        }
+      const res = await dispatch(registerAuth(formData));
+      if (res.error) {
+        displayError(res.payload);
+      } else {
+        displayError(" success", { type: "success", theme: "light" });
       }
     } else {
       result.forEach((errMsg) => {
-        toast(errMsg, {
-          position: "bottom-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          theme: "light",
-          type: "error",
-        });
+        displayError(errMsg);
       });
     }
   };
@@ -112,18 +79,6 @@ function Register() {
         })}
         <button className="main-btn">Submit</button>
       </form>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      ></ToastContainer>
     </div>
   );
 }
