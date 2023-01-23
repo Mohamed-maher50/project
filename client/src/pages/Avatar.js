@@ -15,7 +15,7 @@ function Avatar() {
   const nav = useNavigate();
   const submitAvatar = async () => {
     try {
-      const { data } = await axios.put("http://localhost:4000/auth/avatar", {
+      const { data } = await axios.put("http://localhost:4000/avatar", {
         AvatarURL: selectedAvatar,
         ...{ user, token },
       });
