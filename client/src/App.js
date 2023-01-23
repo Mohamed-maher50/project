@@ -15,7 +15,7 @@ function App() {
     setNotifcationStatus((prev) => !prev);
   };
   return (
-    <div className="App h-screen min-h-screen   overflow-auto">
+    <div className="App h-screen min-h-screen  bg-[#140029]  overflow-auto">
       <NotifcationNav
         notifcationStatusHandler={notifcationStatusHandler}
         notifcationStatus={notifcationStatus}
@@ -28,7 +28,7 @@ function App() {
           element={<Home notifcationStatusHandler={notifcationStatusHandler} />}
         />
 
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/:id" element={<Profile />} />
         <Route path="/avatar" element={<Avatar />} />
       </Routes>
       <ToastContainer
