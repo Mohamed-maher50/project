@@ -38,6 +38,7 @@ function Login() {
     let result = validationForm("login", formData);
     if (result === true) {
       const res = await dispatch(loginAuth(formData));
+      console.log(res);
       if (res.error) {
         displayError(res.payload);
       } else {

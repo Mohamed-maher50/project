@@ -17,7 +17,7 @@ function Profile() {
         <div className="w-fit">
           <ProfileCard user={user} id={id} />
           <div className="w-full my-3 ">
-            <SkillsBar />
+            <SkillsBar user={user} id={id} />
           </div>
         </div>
       </div>
