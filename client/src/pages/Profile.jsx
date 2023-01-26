@@ -8,22 +8,24 @@ import SkillsBar from "../components/smallComponents/SkillsBar";
 
 function Profile() {
   const { id } = useParams();
-  const [user, setUser] = useState(undefined);
-  var currentUser = undefined;
+  const [currentUser, setCurrentUser] = useState(undefined);
+
   useEffect(() => {
     const fetchUser = async () => {
-      await axios.get("");
+      const { data } = await axios.get(`http://localhost:4000/profile/${id}`);
+      setCurrentUser(JSON.parse(data));
     };
-  }, []);
+    fetchUser();
+  }, [id]);
 
   return (
     <div>
       <NavBar />
       <div className="relative pt-4  text-white">
         <div className="w-fit">
-          <ProfileCard user={user} id={id} />
+          <ProfileCard currentUser={currentUser} id={id} />
           <div className="w-full my-3 ">
-            <SkillsBar user={user} id={id} />
+            <SkillsBar currentUser={currentUser} />
           </div>
         </div>
       </div>

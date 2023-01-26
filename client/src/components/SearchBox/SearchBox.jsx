@@ -20,7 +20,7 @@ function SearchBox({ handleSearchBox }) {
   };
   return (
     <>
-      <div className="absolute w-fit right-0 top-0 py-4 px-2 rounded-md shadow bg-secondary text-gray-400 ">
+      <div className="absolute w-fit right-0 top-0 py-4 z-50 px-2 rounded-md shadow bg-secondary text-gray-400 ">
         <div className="flex items-center">
           <input
             type={"search"}

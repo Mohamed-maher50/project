@@ -71,7 +71,7 @@ const addSkill = async (req, res) => {
     },
     { new: true }
   ).select("skills -_id");
-  console.log(await skills);
+
   res.status(200).json(JSON.stringify(skills));
 };
 const getSkills = async (req, res) => {
@@ -88,9 +88,22 @@ const SearchUsers = async (req, res) => {
     },
   })
     .select("-password -firstName -lastName -firstVisit")
-    .limit(10);
-  console.log(users);
+    .limit(5);
   res.status(200).json(JSON.stringify(users));
+};
+const getUser = async (req, res) => {
+  const { id } = req.params;
+
+  if (!id) return res.status(404).json(JSON.stringify({ msg: "404" }));
+  try {
+    const user = await User.findById(id).select(
+      "-password -firstName -lastName -firstVisit"
+    );
+    res.status(200).json(JSON.stringify(user));
+    console.log(user);
+  } catch (error) {
+    res.sendStatus(400);
+  }
 };
 module.exports = {
   Register,
@@ -99,4 +112,5 @@ module.exports = {
   addSkill,
   getSkills,
   SearchUsers,
+  getUser,
 };
