@@ -1,30 +1,32 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
-function ProfileCard({ user, id }) {
-  if (!user) return <div>skilltorn</div>;
+function ProfileCard({ currentUser }) {
+  const { user } = useSelector((state) => state.user);
+  if (!currentUser) return <div>skilltorn</div>;
 
   return (
     <>
       <div className="w-full  text-black relative bg-white rounded-lg p-3 shadow-sm shadow-white">
         <div className="flex items-center">
-          {user._id != id && (
+          {currentUser._id != user?._id && (
             <button className="main-btn  hover:mb-3 h-fit translate-x-14">
               Follower
             </button>
           )}
 
           <img
-            src={user?.AvatarUrl}
+            src={currentUser?.AvatarUrl}
             className=" w-40 h-40  rounded-full mx-auto"
           />
-          {user._id != id && (
+          {currentUser._id != user?._id && (
             <button className="main-btn h-fit hover:mb-3 -translate-x-14">
               message
             </button>
           )}
         </div>
         <h4 className="text-center text-2xl  my-2 font-extralight text-black ">
-          {user?.fullName}
+          {currentUser?.fullName}
         </h4>
         <h4 className="text-center text-xl capitalize font-semibold text-gray-600">
           cairo / giza
