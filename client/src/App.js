@@ -11,31 +11,20 @@ import "react-toastify/dist/ReactToastify.css";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import { useSelector } from "react-redux";
+import Search from "./pages/Search";
 function App() {
   const { user } = useSelector((state) => state.user);
 
   const nav = useNavigate();
-  const [notifcationStatus, setNotifcationStatus] = useState(false);
-  const notifcationStatusHandler = () => {
-    console.log("wokr");
-    setNotifcationStatus((prev) => !prev);
-  };
+
   useEffect(() => {
     nav("/home");
   }, [user]);
 
   return (
     <div className="App h-screen min-h-screen  bg-[#140029]  overflow-auto">
-      <NotifcationNav
-        notifcationStatusHandler={notifcationStatusHandler}
-        notifcationStatus={notifcationStatus}
-      />
-
       <Routes>
-        <Route
-          path="/home"
-          element={<Home notifcationStatusHandler={notifcationStatusHandler} />}
-        />
+        <Route path="/home" element={<Home />} />
         {!user?._id ? (
           <>
             <Route path="/register" element={<Register />} />
@@ -43,6 +32,7 @@ function App() {
           </>
         ) : (
           <>
+            <Route path="/search" element={<Search />} />
             <Route path="/profile/:id" element={<Profile />} />
             <Route path="/avatar" element={<Avatar />} />
           </>

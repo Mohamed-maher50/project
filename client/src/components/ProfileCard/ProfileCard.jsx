@@ -1,6 +1,8 @@
 import React from "react";
 
 function ProfileCard({ user, id }) {
+  if (!user) return <div>skilltorn</div>;
+
   return (
     <>
       <div className="w-full  text-black relative bg-white rounded-lg p-3 shadow-sm shadow-white">
@@ -22,7 +24,7 @@ function ProfileCard({ user, id }) {
           )}
         </div>
         <h4 className="text-center text-2xl  my-2 font-extralight text-black ">
-          {user?.firstName + " " + user?.lastName}
+          {user?.fullName}
         </h4>
         <h4 className="text-center text-xl capitalize font-semibold text-gray-600">
           cairo / giza

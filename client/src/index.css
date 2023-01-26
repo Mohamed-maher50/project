@@ -26,4 +26,7 @@ input {
     background-color: aliceblue;
     color: #9d3cff;
   }
+  .icon-btn {
+    @apply p-3 rounded-full cursor-pointer shadow-sm;
+  }
 }

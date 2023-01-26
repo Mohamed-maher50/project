@@ -7,7 +7,7 @@ import Layout from "./Layout";
 function SkillsBar({ user, id }) {
   const [layout, setLayout] = useState(false);
   const [skillValue, setSkillValue] = useState("");
-  const token = JSON.parse(localStorage.getItem("userInfo")).token;
+  const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
   const [skills, setSkills] = useState([]);
   const config = {
     headers: {
@@ -50,6 +50,7 @@ function SkillsBar({ user, id }) {
         displayError(JSON.parse(err.response.data).msg);
     }
   };
+  if (!user) return <>skilton</>;
   return (
     <>
       <div className="text-center text-main rounded-lg p-3 w-full bg-white text-2xl capitalize  font-bold">

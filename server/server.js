@@ -16,7 +16,7 @@ require("./db/connection");
 //
 app.use(express.json());
 
-app.use("/auth", require("./routes/user"));
+app.use(require("./routes/user"));
 
 app.listen(process.env.PORT, () => {
   console.log("listen in port 4000");
