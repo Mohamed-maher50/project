@@ -1,20 +1,30 @@
 import React from "react";
 
 function ProfileCard({ user, id }) {
+  if (!user) return <div>skilltorn</div>;
+
   return (
     <>
-      <div className="w-fit  text-black relative bg-white rounded-lg p-3 shadow-sm shadow-white">
+      <div className="w-full  text-black relative bg-white rounded-lg p-3 shadow-sm shadow-white">
         <div className="flex items-center">
-          <button className="main-btn  hover:mb-3 h-fit translate-x-14">
-            Follower
-          </button>
-          <img src={user?.AvatarUrl} className=" w-40 h-40 mx-5 rounded-full" />
-          <button className="main-btn h-fit hover:mb-3 -translate-x-14">
-            message
-          </button>
+          {user._id != id && (
+            <button className="main-btn  hover:mb-3 h-fit translate-x-14">
+              Follower
+            </button>
+          )}
+
+          <img
+            src={user?.AvatarUrl}
+            className=" w-40 h-40  rounded-full mx-auto"
+          />
+          {user._id != id && (
+            <button className="main-btn h-fit hover:mb-3 -translate-x-14">
+              message
+            </button>
+          )}
         </div>
         <h4 className="text-center text-2xl  my-2 font-extralight text-black ">
-          {user?.firstName + " " + user?.lastName}
+          {user?.fullName}
         </h4>
         <h4 className="text-center text-xl capitalize font-semibold text-gray-600">
           cairo / giza

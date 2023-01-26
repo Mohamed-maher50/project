@@ -24,9 +24,9 @@ const Register = async (req, res) => {
     password,
     confirmPassword,
   }).save();
-  user = await User.findById(user.id).select("email");
+  user = await User.findById(user.id).select("-password");
   const token = await jwt.sign(user.id, process.env.SECRET_KEY_JWT);
-  res.status(201).json(JSON.stringify({ email: user.email, jwt: token }));
+  res.status(201).json(JSON.stringify({ user, token: token }));
 };
 const Login = async (req, res) => {
   const { email, password } = req.body;
@@ -48,7 +48,6 @@ const Login = async (req, res) => {
 };
 const Avatar = async (req, res) => {
   const { AvatarURL, user, token } = req.body;
-
   if (!AvatarURL) return res.status(400).send("not selected avatar image");
   if (!user) return res.status(400).send("can't find this user");
   const userExist = await User.findByIdAndUpdate(user._id, {
@@ -58,8 +57,46 @@ const Avatar = async (req, res) => {
   userExist.password = undefined;
   res.status(200).json(JSON.stringify({ user: userExist, token }));
 };
+//
+const addSkill = async (req, res) => {
+  const { data } = req.body;
+  if (!data)
+    return res.status(400).json(JSON.stringify({ msg: "Enter Value" }));
+  const skills = await User.findByIdAndUpdate(
+    req.userId,
+    {
+      $push: {
+        skills: data,
+      },
+    },
+    { new: true }
+  ).select("skills -_id");
+  console.log(await skills);
+  res.status(200).json(JSON.stringify(skills));
+};
+const getSkills = async (req, res) => {
+  const skills = await User.findById(req.userId).select("skills -_id");
+  res.status(200).json(JSON.stringify(skills));
+};
+const SearchUsers = async (req, res) => {
+  const query = req.query.searchValue;
+  if (!query) return res.status(200).json(JSON.stringify([]));
+  const users = await User.find({
+    fullName: {
+      $regex: query,
+      $options: "i",
+    },
+  })
+    .select("-password -firstName -lastName -firstVisit")
+    .limit(10);
+  console.log(users);
+  res.status(200).json(JSON.stringify(users));
+};
 module.exports = {
   Register,
   Login,
   Avatar,
+  addSkill,
+  getSkills,
+  SearchUsers,
 };

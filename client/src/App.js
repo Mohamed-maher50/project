@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Route, Routes } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "./App.css";
 import Login from "./components/Login/Login";
@@ -9,27 +10,33 @@ import Avatar from "./pages/Avatar";
 import "react-toastify/dist/ReactToastify.css";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
+import { useSelector } from "react-redux";
+import Search from "./pages/Search";
 function App() {
-  const [notifcationStatus, setNotifcationStatus] = useState(false);
-  const notifcationStatusHandler = () => {
-    setNotifcationStatus((prev) => !prev);
-  };
+  const { user } = useSelector((state) => state.user);
+
+  const nav = useNavigate();
+
+  useEffect(() => {
+    nav("/home");
+  }, [user]);
+
   return (
     <div className="App h-screen min-h-screen  bg-[#140029]  overflow-auto">
-      <NotifcationNav
-        notifcationStatusHandler={notifcationStatusHandler}
-        notifcationStatus={notifcationStatus}
-      />
       <Routes>
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route
-          path="/home"
-          element={<Home notifcationStatusHandler={notifcationStatusHandler} />}
-        />
-
-        <Route path="/profile/:id" element={<Profile />} />
-        <Route path="/avatar" element={<Avatar />} />
+        <Route path="/home" element={<Home />} />
+        {!user?._id ? (
+          <>
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+          </>
+        ) : (
+          <>
+            <Route path="/search" element={<Search />} />
+            <Route path="/profile/:id" element={<Profile />} />
+            <Route path="/avatar" element={<Avatar />} />
+          </>
+        )}
       </Routes>
       <ToastContainer
         position="top-right"

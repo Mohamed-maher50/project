@@ -1,67 +1,65 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-function NavBar({ notifcationStatusHandler }) {
-  const [Active, setActive] = useState(true);
+import SearchBox from "./SearchBox/SearchBox";
+function NavBar() {
   const { user } = useSelector((state) => state.user);
-  const SubMenu = function () {
+  const [searchBox, setSearchBox] = useState(false);
+
+  const handleSearchBox = () => {
+    setSearchBox((prev) => !prev);
+  };
+
+  const UserActive = () => {
     return (
-      <div className="flex ml-auto w-full">
-        <input
-          type={"search"}
-          placeholder="search"
-          className="rounded-full h-10 p-2 outline-none text-lg grow shadow"
-          spellCheck="false"
-        />
-        <Link to={`/profile/${user?._id}`} className="flex ">
-          <span className="rounded-full cursor-pointer border-secondary border-2 outline-2 outline-offset-2 outline-none outline-lime-50 overflow-hidden inline-block w-10 h-10 mx-3">
-            <img src={user.AvatarUrl} />
-          </span>
+      <>
+        <Link to={"/notification"}>
+          <i className="fas fa-bell p-2 h-fit  cursor-pointer"></i>
         </Link>
-      </div>
+
+        <i
+          className="fas fa-search cursor-pointer  h-fit mx-1 p-2 rounded-full "
+          onClick={handleSearchBox}
+        ></i>
+        <Link to={`/profile/${user?._id}`}>
+          <div className="w-14 h-14 rounded-full overflow-hidden cursor-pointer">
+            <img src={user?.AvatarUrl} alt="avatar" />
+          </div>
+        </Link>
+      </>
     );
   };
+  const UserNotFound = () => {
+    return (
+      <>
+        <Link className="mr-3" to={"/login"}>
+          <span>Login</span>
+        </Link>
+        <Link to={"/register"}>
+          <span>SignUp</span>
+        </Link>
+      </>
+    );
+  };
+
   return (
-    <>
-      <div className="bg-main top-0 shadow-md shadow-black  w-full relative z-20 p-1 flex items-center overflow-hidden">
-        <div className="logo flex items-center px-4 ">
-          <img
-            src="/images.png"
-            className={"rounded-full w-12 h-12"}
-            alt="logo"
-          />
-          <span className="text-2xl ml-2 font-bold uppercase font-mono text-[#F8F4EA]">
-            can you
-          </span>
-        </div>
-        <i
-          className={`fa-solid fa-bell ml-auto text-yellow-400 text-2xl mx-1 cursor-pointer`}
-          onClick={notifcationStatusHandler}
-        ></i>
-        <div
-          onClick={() => setActive(!Active)}
-          className=" cursor-pointer w-12 h-12 flex items-center justify-center rounded-lg bg-[#F8F4EA] text-[#579BB1] lg:hidden"
-        >
-          <i
-            className="fa fa-bars text-2xl p-4  text-main"
-            aria-hidden="true"
-          ></i>
+    <div className="w-full text-white">
+      <div className=" container mx-auto flex py-2 px-5">
+        <div className="flex items-center">
+          <div className="w-14 h-14 rounded-full overflow-hidden flex">
+            <img src="/images.png" alt="logo" />
+          </div>
+          <h2 className="text-white ml-3 text-lg md:text-2xl font-bold ">
+            YOU CAN
+          </h2>
         </div>
 
-        <div className="hidden lg:flex items-center w-80 ">
-          <SubMenu />
+        <div className="ml-auto text-xl flex items-center">
+          {user?._id ? <UserActive /> : <UserNotFound />}
         </div>
       </div>
-      <div
-        className={`fixed h-screen flex justify-center lg:hidden pt-24 z-10 ${
-          Active ? "-left-[100%]" : "w-full"
-        }   bg-main`}
-      >
-        <div className="flex w-full px-8 md:px-24 h-fit items-center ml-auto">
-          <SubMenu />
-        </div>
-      </div>
-    </>
+      {searchBox && <SearchBox handleSearchBox={handleSearchBox} />}
+    </div>
   );
 }
 

@@ -3,13 +3,16 @@ import axios from "axios";
 const loginAuth = createAsyncThunk(
   "posts/getPosts",
   async (formData, { rejectWithValue }) => {
+    console.log(formData);
     try {
       const { data } = await axios.post(
         "http://localhost:4000/auth/login",
         formData
       );
+      console.log(data);
       return data;
     } catch (err) {
+      console.log(err);
       return rejectWithValue(err.response.data);
     }
   }
@@ -28,13 +31,18 @@ const registerAuth = createAsyncThunk(
     }
   }
 );
+const initialState = JSON.parse(localStorage.getItem("userInfo")) || {};
+console.log(initialState);
 const userReducer = createSlice({
   name: "user",
-  initialState: JSON.parse(localStorage.getItem("userInfo")),
+  initialState: initialState,
   reducers: {},
   extraReducers: {
-    [loginAuth.pending]: (state) => {},
+    [loginAuth.pending]: (state, { payload }) => {
+      console.log({ payload });
+    },
     [loginAuth.fulfilled]: (state, { payload }) => {
+      console.log(payload);
       localStorage.setItem("userInfo", payload);
     },
     [loginAuth.rejected]: (state, d) => {},

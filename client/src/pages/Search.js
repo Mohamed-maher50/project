@@ -1,13 +1,13 @@
 import React from "react";
 import NavBar from "../components/NavBar";
 
-function Home() {
+function Search() {
   return (
     <>
       <NavBar />
-      <div>hello</div>
+      Search
     </>
   );
 }
 
-export default Home;
+export default Search;
