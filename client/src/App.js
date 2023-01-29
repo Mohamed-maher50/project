@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
 import { Route, Routes } from "react-router";
-import { useNavigate } from "react-router-dom";
+
 import { ToastContainer } from "react-toastify";
 import "./App.css";
 import Login from "./components/Login/Login";
@@ -13,14 +12,7 @@ import Profile from "./pages/Profile";
 import { useSelector } from "react-redux";
 import Search from "./pages/Search";
 function App() {
-  const { user } = useSelector((state) => state.user);
-
-  const nav = useNavigate();
-
-  useEffect(() => {
-    nav("/home");
-  }, [user]);
-
+  const { user } = useSelector((state) => state.user.userData);
   return (
     <div className="App h-screen min-h-screen  bg-[#140029]  overflow-auto">
       <Routes>

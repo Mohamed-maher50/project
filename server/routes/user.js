@@ -8,6 +8,7 @@ const {
   getSkills,
   SearchUsers,
   getUser,
+  SendFollow,
 } = require("../controllers/userControllers");
 const protect = require("../utils/protect");
 
@@ -18,4 +19,5 @@ router.post("/addSkill", protect, addSkill);
 router.get("/getSkills", protect, getSkills);
 router.get("/search", protect, SearchUsers);
 router.get("/profile/:id", getUser);
+router.put("/profile/follow", protect, SendFollow);
 module.exports = router;

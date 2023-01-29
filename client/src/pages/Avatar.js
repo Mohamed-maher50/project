@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 function Avatar() {
   const [img, setImg] = useState([]);
   const [selectedAvatar, setSelectedAvatar] = useState("");
-  const { user, token } = useSelector((state) => state.user);
+  const { user, token } = useSelector((state) => state.user.userData);
 
   const nav = useNavigate();
   const submitAvatar = async () => {

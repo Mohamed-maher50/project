@@ -1,39 +1,22 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-
+import { config } from "../../config";
 import { displayError } from "../../validate/displayError";
 import { SkillButton } from "../smallComponents/skillsButton";
 import Layout from "./Layout";
 function SkillsBar({ currentUser }) {
   const [layout, setLayout] = useState(false);
   const [skillValue, setSkillValue] = useState("");
-  const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
-  const [skills, setSkills] = useState([]);
-  const { user } = useSelector((state) => state.user);
-  const config = {
-    headers: {
-      Authorization: "bearer " + token,
-    },
-  };
-  useEffect(() => {
-    const fetchSkills = async () => {
-      const { data } = await axios.get(
-        "http://localhost:4000/getSkills",
-        config
-      );
-
-      if (data) setSkills(JSON.parse(data)?.skills);
-    };
-    fetchSkills();
-  }, []);
-
+  const { user } = useSelector((state) => state.user.userData);
   const handleChange = (e) => {
     setSkillValue(e.target.value);
   };
   const handler = () => {
     setLayout((prev) => !prev);
   };
+  useEffect(() => {}, [currentUser]);
+
   const submitSkill = async () => {
     try {
       const { data } = await axios.post(
@@ -42,7 +25,7 @@ function SkillsBar({ currentUser }) {
         config
       );
       if (data) {
-        setSkills(JSON.parse(data).skills);
+        currentUser.skills = JSON.parse(data).skills;
         setSkillValue("");
         displayError("success", { type: "success" });
         handler();
@@ -66,7 +49,7 @@ function SkillsBar({ currentUser }) {
           ""
         )}
         <div className="flex justify-center w-[400px] my-4 gap-2 flex-wrap">
-          {skills.map((sk, index) => {
+          {currentUser?.skills.map((sk, index) => {
             return <SkillButton skill={sk} randomColor key={index} />;
           })}
         </div>

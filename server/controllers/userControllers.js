@@ -100,10 +100,30 @@ const getUser = async (req, res) => {
       "-password -firstName -lastName -firstVisit"
     );
     res.status(200).json(JSON.stringify(user));
-    console.log(user);
   } catch (error) {
     res.sendStatus(400);
   }
+};
+const SendFollow = async (req, res) => {
+  const { id } = req.body;
+  if (!id) return res.sendStatus(404);
+
+  const following = await User.findByIdAndUpdate(
+    req.userId,
+    {
+      $addToSet: {
+        following: id,
+      },
+    },
+    { new: true }
+  ).select("-password -firstVisit");
+  const addToFollowers = await User.findByIdAndUpdate(id, {
+    $addToSet: {
+      followers: req.userId,
+    },
+  });
+
+  res.status(200).json(JSON.stringify({ user: following, token: req.token }));
 };
 module.exports = {
   Register,
@@ -113,4 +133,5 @@ module.exports = {
   getSkills,
   SearchUsers,
   getUser,
+  SendFollow,
 };

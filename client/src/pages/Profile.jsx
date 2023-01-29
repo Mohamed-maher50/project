@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import ProfileCard from "../components/ProfileCard/ProfileCard";
@@ -9,14 +10,14 @@ import SkillsBar from "../components/smallComponents/SkillsBar";
 function Profile() {
   const { id } = useParams();
   const [currentUser, setCurrentUser] = useState(undefined);
-
+  const { user } = useSelector((state) => state.user.userData);
   useEffect(() => {
     const fetchUser = async () => {
       const { data } = await axios.get(`http://localhost:4000/profile/${id}`);
       setCurrentUser(JSON.parse(data));
     };
     fetchUser();
-  }, [id]);
+  }, [id, user]);
 
   return (
     <div>

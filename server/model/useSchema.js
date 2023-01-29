@@ -34,10 +34,9 @@ const userSchema = new mongoose.Schema({
   },
   skills: [String],
   fullName: String,
-  followers: {
-    type: [mongoose.Types.ObjectId],
-    ref: "Users",
-  },
+  following: [{ type: mongoose.Types.ObjectId, ref: "Users" }],
+  followers: [{ type: mongoose.Types.ObjectId, ref: "Users" }],
+
   followerNumber: {
     type: Number,
   },
