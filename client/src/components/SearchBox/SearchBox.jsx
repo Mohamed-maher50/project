@@ -39,6 +39,7 @@ function SearchBox({ handleSearchBox }) {
           {searchResults.map((box) => {
             return (
               <Link
+                onClick={handleSearchBox}
                 to={`/profile/${box._id}`}
                 key={box._id}
                 className="text-white shadow-lg px-3 py-2 bg-main rounded-lg flex items-center text-xl capitalize mb-3 hover:bg-white duration-500 ease-in-out hover:text-main"

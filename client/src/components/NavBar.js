@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import SearchBox from "./SearchBox/SearchBox";
 function NavBar() {
-  const { user } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user.userData);
   const [searchBox, setSearchBox] = useState(false);
 
   const handleSearchBox = () => {
@@ -45,14 +45,14 @@ function NavBar() {
   return (
     <div className="w-full text-white">
       <div className=" container mx-auto flex py-2 px-5">
-        <div className="flex items-center">
+        <Link to={"/home"} className="flex items-center">
           <div className="w-14 h-14 rounded-full overflow-hidden flex">
-            <img src="/images.png" alt="logo" />
+            <img src="/logo1.png" alt="logo" />
           </div>
           <h2 className="text-white ml-3 text-lg md:text-2xl font-bold ">
             YOU CAN
           </h2>
-        </div>
+        </Link>
 
         <div className="ml-auto text-xl flex items-center">
           {user?._id ? <UserActive /> : <UserNotFound />}

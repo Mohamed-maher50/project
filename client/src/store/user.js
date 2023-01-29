@@ -12,7 +12,6 @@ const loginAuth = createAsyncThunk(
       console.log(data);
       return data;
     } catch (err) {
-      console.log(err);
       return rejectWithValue(err.response.data);
     }
   }
@@ -32,11 +31,18 @@ const registerAuth = createAsyncThunk(
   }
 );
 const initialState = JSON.parse(localStorage.getItem("userInfo")) || {};
-console.log(initialState);
 const userReducer = createSlice({
   name: "user",
-  initialState: initialState,
-  reducers: {},
+  initialState: {
+    userData: initialState,
+  },
+  reducers: {
+    updateUser: (state, { payload }) => {
+      localStorage.setItem("userInfo", payload);
+
+      state.userData = JSON.parse(payload);
+    },
+  },
   extraReducers: {
     [loginAuth.pending]: (state, { payload }) => {
       console.log({ payload });
@@ -56,5 +62,5 @@ const userReducer = createSlice({
   },
 });
 export default userReducer.reducer;
-
+export const { updateUser } = userReducer.actions;
 export { loginAuth, registerAuth };

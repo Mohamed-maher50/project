@@ -1,16 +1,41 @@
+import axios from "axios";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { config } from "../../config";
+import { updateUser } from "../../store/user";
+import { userAlreadyFollowing } from "../../utils/ProfileMethods";
 
 function ProfileCard({ currentUser }) {
-  const { user } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user.userData);
+
+  const dispatch = useDispatch();
   if (!currentUser) return <div>skilltorn</div>;
 
+  const SendFollow = async () => {
+    const { data } = await axios.put(
+      `http://localhost:4000/profile/follow`,
+      {
+        id: currentUser?._id,
+      },
+      config
+    );
+    dispatch(updateUser(data));
+  };
+  const AlreadyFollowing = userAlreadyFollowing(user, currentUser);
   return (
     <>
-      <div className="w-full  text-black relative bg-white rounded-lg p-3 shadow-sm shadow-white">
+      <div className="w-full text-black relative bg-white rounded-lg p-3 shadow-sm shadow-white">
         <div className="flex items-center">
           {currentUser._id != user?._id && (
-            <button className="main-btn  hover:mb-3 h-fit translate-x-14">
+            <button
+              className={`main-btn h-fit translate-x-14   ${
+                AlreadyFollowing
+                  ? "bg-blue-400 disabled  pointer-events-none"
+                  : " hover:mb-3 "
+              }`}
+              onClick={SendFollow}
+              disabled={AlreadyFollowing}
+            >
               Follower
             </button>
           )}
@@ -33,16 +58,18 @@ function ProfileCard({ currentUser }) {
         </h4>
         <div className="flex justify-evenly my-2 ">
           <span className="flex flex-col text-main shadow-lg items-center bg-gray-50 p-2 font-bold text-xl capitalize rounded-lg">
-            Followers
-            <span className=" text-secondary">12312</span>
+            Follower
+            <span className=" text-secondary">
+              {currentUser?.followers.length}
+            </span>
           </span>
           <span className="flex flex-col text-main shadow-lg items-center bg-gray-50 p-2 font-bold text-xl capitalize rounded-lg">
             helpes
-            <span className=" text-secondary">122</span>
+            <span className=" text-secondary">0</span>
           </span>
           <span className="flex flex-col  text-main shadow-lg items-center bg-gray-50 p-2 font-bold text-xl capitalize rounded-lg">
             Ranks
-            <span className=" text-secondary">41</span>
+            <span className=" text-secondary">0</span>
           </span>
         </div>
       </div>
