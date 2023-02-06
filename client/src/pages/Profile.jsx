@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import NavBar from "../components/NavBar";
+
 import ProfileCard from "../components/ProfileCard/ProfileCard";
 
 import SkillsBar from "../components/smallComponents/SkillsBar";
@@ -21,10 +21,9 @@ function Profile() {
 
   return (
     <div>
-      <NavBar />
       <div className="relative pt-4  text-white">
         <div className="w-fit">
-          <ProfileCard currentUser={currentUser} id={id} />
+          <ProfileCard />
           <div className="w-full my-3 ">
             <SkillsBar currentUser={currentUser} />
           </div>

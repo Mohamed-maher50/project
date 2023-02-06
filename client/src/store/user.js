@@ -1,19 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { PostRequest } from "../utils/ProfileMethods";
 const loginAuth = createAsyncThunk(
-  "posts/getPosts",
+  "user/login",
   async (formData, { rejectWithValue }) => {
-    console.log(formData);
-    try {
-      const { data } = await axios.post(
-        "http://localhost:4000/auth/login",
-        formData
-      );
-      console.log(data);
-      return data;
-    } catch (err) {
-      return rejectWithValue(err.response.data);
-    }
+    const [data, err] = await PostRequest(
+      "http://localhost:4000/auth/login",
+      formData
+    );
+    if (!data) return rejectWithValue(err.response.data);
+    return data;
   }
 );
 const registerAuth = createAsyncThunk(
@@ -39,19 +35,22 @@ const userReducer = createSlice({
   reducers: {
     updateUser: (state, { payload }) => {
       localStorage.setItem("userInfo", payload);
-
       state.userData = JSON.parse(payload);
     },
   },
   extraReducers: {
     [loginAuth.pending]: (state, { payload }) => {
+      console.log("pending");
       console.log({ payload });
     },
     [loginAuth.fulfilled]: (state, { payload }) => {
-      console.log(payload);
+      console.log("fulfilled");
       localStorage.setItem("userInfo", payload);
+      state.userData = JSON.parse(payload);
     },
-    [loginAuth.rejected]: (state, d) => {},
+    [loginAuth.rejected]: (state, d) => {
+      console.log("rejected");
+    },
     [registerAuth.pending]: (state) => {},
     [registerAuth.fulfilled]: (state, { payload }) => {
       localStorage.setItem("userInfo", payload);

@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 function SearchBox({ handleSearchBox }) {
-  const [searchValue, setSearchValue] = useState("");
   const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
   const [searchResults, setSearchResults] = useState([]);
   const config = {

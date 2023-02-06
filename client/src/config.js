@@ -4,3 +4,11 @@ export const config = {
     Authorization: "bearer " + token,
   },
 };
+const authConfig = (token) => {
+  return {
+    headers: {
+      Authorization: "bearer " + token,
+    },
+  };
+};
+export default authConfig;

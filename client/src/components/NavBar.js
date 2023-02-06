@@ -45,7 +45,7 @@ function NavBar() {
   return (
     <div className="w-full text-white">
       <div className=" container mx-auto flex py-2 px-5">
-        <Link to={"/home"} className="flex items-center">
+        <Link to={`/home/${user?._id}`} className="flex items-center">
           <div className="w-14 h-14 rounded-full overflow-hidden flex">
             <img src="/logo1.png" alt="logo" />
           </div>

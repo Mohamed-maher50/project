@@ -1,12 +1,13 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { config } from "../config";
 function Avatar() {
   const [img, setImg] = useState([]);
   const [selectedAvatar, setSelectedAvatar] = useState("");
@@ -15,10 +16,14 @@ function Avatar() {
   const nav = useNavigate();
   const submitAvatar = async () => {
     try {
-      const { data } = await axios.put("http://localhost:4000/avatar", {
-        AvatarURL: selectedAvatar,
-        ...{ user, token },
-      });
+      const { data } = await axios.put(
+        "http://localhost:4000/avatar",
+        {
+          AvatarURL: selectedAvatar,
+          ...{ user, token },
+        },
+        config
+      );
       localStorage.setItem("userInfo", data);
       nav("/home");
     } catch (err) {
@@ -78,9 +83,11 @@ function Avatar() {
           >
             Submit
           </button>
-          <button type="submit" className="outline-btn   block ml-auto">
-            Skip
-          </button>
+          <Link to={"/home"}>
+            <button type="submit" className="outline-btn   block ml-auto">
+              Skip
+            </button>
+          </Link>
         </div>
       </div>
     </div>
