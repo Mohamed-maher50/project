@@ -2,6 +2,8 @@ const User = require("../model/useSchema");
 
 const jwt = require("jsonwebtoken");
 const { verifyPassword } = require("../utils/hashPassword");
+const { isId } = require("../utils/protect");
+const Post = require("../model/Post");
 
 const Register = async (req, res) => {
   const { firstName, lastName, email, password, confirmPassword } = req.body;
@@ -29,7 +31,7 @@ const Register = async (req, res) => {
   res.status(201).json(JSON.stringify({ user, token: token }));
 };
 const Login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body.data;
 
   if (!email || !password) return res.status(401).send("please fill fields");
   try {
@@ -94,7 +96,7 @@ const SearchUsers = async (req, res) => {
 const getUser = async (req, res) => {
   const { id } = req.params;
 
-  if (!id) return res.status(404).json(JSON.stringify({ msg: "404" }));
+  if (!isId(id)) return res.status(404).json(JSON.stringify({ msg: "404" }));
   try {
     const user = await User.findById(id).select(
       "-password -firstName -lastName -firstVisit"
@@ -106,7 +108,7 @@ const getUser = async (req, res) => {
 };
 const SendFollow = async (req, res) => {
   const { id } = req.body;
-  if (!id) return res.sendStatus(404);
+  if (!isId(id)) return res.sendStatus(404);
 
   const following = await User.findByIdAndUpdate(
     req.userId,
@@ -117,13 +119,51 @@ const SendFollow = async (req, res) => {
     },
     { new: true }
   ).select("-password -firstVisit");
-  const addToFollowers = await User.findByIdAndUpdate(id, {
-    $addToSet: {
-      followers: req.userId,
+  const followUser = await User.findByIdAndUpdate(
+    id,
+    {
+      $addToSet: {
+        followers: req.userId,
+      },
     },
+    { new: true }
+  ).select("-password");
+
+  res.status(200).json(JSON.stringify({ data: followUser }));
+};
+const getCardInfo = async (req, res) => {
+  const { id } = req.params;
+  if (!isId(id))
+    return res.status(400).json({ msg: "not found id from params" });
+
+  const user = await User.findById(id).select(
+    " followers following fullName AvatarUrl"
+  );
+
+  res.status(200).json(JSON.stringify(user));
+};
+const postNewPost = async (req, res) => {
+  const { title, userType, filed, skills } = req.body.data;
+  const savedPost = await Post.create({
+    title,
+    userType,
+    filed,
+    skills,
+    author: req.userId,
   });
 
-  res.status(200).json(JSON.stringify({ user: following, token: req.token }));
+  const user = await User.findByIdAndUpdate(
+    req.userId,
+    {
+      $push: {
+        posts: savedPost._id,
+      },
+    },
+    { new: true }
+  );
+  console.log(user);
+
+  res.status(200).json(JSON.stringify(savedPost));
 };
 module.exports = {
   Register,
@@ -134,4 +174,6 @@ module.exports = {
   SearchUsers,
   getUser,
   SendFollow,
+  getCardInfo,
+  postNewPost,
 };

@@ -3,8 +3,10 @@ import { useDispatch } from "react-redux";
 
 import { validationForm } from "../../validate/ValidateForm";
 import InputForm from "../inputForm";
-import { loginAuth } from "../../store/user";
+import updateToken from "../../config";
 import { displayError } from "../../validate/displayError";
+import { useNavigate } from "react-router-dom";
+import { loginAuth } from "../../store/user";
 const inputs = [
   {
     id: "1",
@@ -21,6 +23,7 @@ const inputs = [
 ];
 function Login() {
   const dispatch = useDispatch();
+  const nav = useNavigate();
   displayError();
   const [formData, setFormData] = useState({
     email: "",
@@ -38,10 +41,11 @@ function Login() {
     let result = validationForm("login", formData);
     if (result === true) {
       const res = await dispatch(loginAuth(formData));
-      console.log(res);
       if (res.error) {
         displayError(res.payload);
       } else {
+        const { user } = JSON.parse(res.payload);
+        nav(`/home/${user._id}`);
         displayError("👌 success", { type: "success", theme: "light" });
       }
     } else {

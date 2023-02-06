@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { config } from "../../config";
+import { PostRequest } from "../../utils/ProfileMethods";
 import { displayError } from "../../validate/displayError";
 import { SkillButton } from "../smallComponents/skillsButton";
 import Layout from "./Layout";
@@ -18,19 +19,17 @@ function SkillsBar({ currentUser }) {
   useEffect(() => {}, [currentUser]);
 
   const submitSkill = async () => {
-    try {
-      const { data } = await axios.post(
-        "http://localhost:4000/addSkill",
-        { data: skillValue },
-        config
-      );
-      if (data) {
-        currentUser.skills = JSON.parse(data).skills;
-        setSkillValue("");
-        displayError("success", { type: "success" });
-        handler();
-      }
-    } catch (err) {
+    const [data, err] = await PostRequest(
+      "http://localhost:4000/addSkill",
+      skillValue,
+      config
+    );
+    if (data) {
+      currentUser.skills = JSON.parse(data).skills;
+      setSkillValue("");
+      displayError("success", { type: "success" });
+      handler();
+    } else {
       if (err.response.status === 400)
         displayError(JSON.parse(err.response.data).msg);
     }

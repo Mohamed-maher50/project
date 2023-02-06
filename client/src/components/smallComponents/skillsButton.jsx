@@ -7,8 +7,6 @@ function SkillButton({ skill, randomColor }) {
     "bg-blue-400",
     "bg-green-400",
     "bg-yellow-400",
-    "bg-main",
-    "bg-secondary",
   ];
 
   return (

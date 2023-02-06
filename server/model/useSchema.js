@@ -43,6 +43,12 @@ const userSchema = new mongoose.Schema({
   phone: {
     type: String,
   },
+  posts: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "Post",
+    },
+  ],
 });
 
 userSchema.pre("save", async function () {
