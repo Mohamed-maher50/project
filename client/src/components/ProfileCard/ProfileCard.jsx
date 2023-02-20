@@ -1,22 +1,24 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { socket } from "../../App";
 import authConfig from "../../config";
+import { pushToChat } from "../../store/ChatReducer";
 import { getRequest, userAlreadyFollowing } from "../../utils/ProfileMethods";
 
 function ProfileCard() {
   const { token, user } = useSelector((state) => state.user.userData);
-
+  const { sockets, chatsId } = useSelector((state) => state.chat);
   const [cardInfo, setCardInfo] = useState(undefined);
+  console.log(cardInfo);
   const { id } = useParams();
+  const dispatch = useDispatch();
   const sendMessage = () => {
-    socket.emit("joinWith", "Room");
+    if (sockets) sockets.emit("joinWith", id);
+    dispatch(pushToChat({ ...cardInfo, isActive: true, messages: [] }));
   };
-  useEffect(() => {
-    console.log(socket);
-  }, [socket]);
+  useEffect(() => {}, [socket]);
   useEffect(() => {
     const getCardInfo = async () => {
       const [data, err] = await getRequest(
@@ -44,7 +46,7 @@ function ProfileCard() {
   const AlreadyFollowing = userAlreadyFollowing(cardInfo, user._id);
   return (
     <>
-      <div className="w-full text-black relative bg-white rounded-lg p-3 shadow-sm shadow-white">
+      <div className="w-full ml-2 text-black relative bg-white rounded-lg p-3 shadow-md  shadow-darkWhite">
         <div className="flex items-center">
           {id != user?._id && (
             <button
@@ -80,17 +82,17 @@ function ProfileCard() {
           cairo / giza
         </h4>
         <div className="flex justify-evenly my-2 ">
-          <span className="flex flex-col text-main shadow-lg items-center bg-gray-50 p-2 font-bold text-xl capitalize rounded-lg">
+          <span className="flex flex-col text-white bg-open shadow-lg items-center  p-2 font-bold text-xl capitalize rounded-lg">
             Follower
             <span className=" text-secondary">{cardInfo.followers.length}</span>
           </span>
-          <span className="flex flex-col text-main shadow-lg items-center bg-gray-50 p-2 font-bold text-xl capitalize rounded-lg">
+          <span className="flex flex-col text-white shadow-lg items-center bg-open p-2 font-bold text-xl capitalize rounded-lg">
             helpes
-            <span className=" text-secondary">0</span>
+            <span className=" text-white">0</span>
           </span>
-          <span className="flex flex-col  text-main shadow-lg items-center bg-gray-50 p-2 font-bold text-xl capitalize rounded-lg">
+          <span className="flex flex-col text-white  bg-open shadow-lg items-center  p-2 font-bold text-xl capitalize rounded-lg">
             Ranks
-            <span className=" text-secondary">0</span>
+            <span className=" text-white">0</span>
           </span>
         </div>
       </div>

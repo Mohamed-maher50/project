@@ -7,7 +7,7 @@ export const getPosts = createAsyncThunk("user/posts", async (token) => {
     "http://localhost:4000/getPosts",
     authConfig(token)
   );
-  console.log(data);
+
   return data;
 });
 const PostReducer = createSlice({
@@ -21,7 +21,7 @@ const PostReducer = createSlice({
   extraReducers: {
     [getPosts.pending]: (state, { payload }) => {},
     [getPosts.fulfilled]: (state, { payload }) => {
-      state.posts = payload.following;
+      state.posts = payload;
     },
     [getPosts.rejected]: (state, { payload }) => {},
   },

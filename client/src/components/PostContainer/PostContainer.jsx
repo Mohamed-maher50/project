@@ -13,8 +13,6 @@ function PostContainer() {
   useEffect(() => {
     const getallPosts = async () => {
       let data = await dispatch(getPosts(token));
-
-      console.log(data.payload.following);
     };
 
     getallPosts();

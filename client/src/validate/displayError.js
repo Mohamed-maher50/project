@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 function displayError(error, ...options) {
   toast(error, {
-    position: "bottom-right",
+    position: options[0]?.position || "bottom-right",
     autoClose: 5000,
     hideProgressBar: false,
     closeOnClick: true,

@@ -43,11 +43,11 @@ function NavBar() {
   };
 
   return (
-    <div className="w-full text-white">
+    <div className="w-full text-white bg-open">
       <div className=" container mx-auto flex py-2 px-5">
         <Link to={`/home/${user?._id}`} className="flex items-center">
           <div className="w-14 h-14 rounded-full overflow-hidden flex">
-            <img src="/logo1.png" alt="logo" />
+            <img src="/logo1.png" alt="logo" className=" object-cover" />
           </div>
           <h2 className="text-white ml-3 text-lg md:text-2xl font-bold ">
             YOU CAN

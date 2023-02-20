@@ -22,18 +22,27 @@ const server = app.listen(process.env.PORT, () => {
   console.log("listen in port 4000");
 });
 const io = require("socket.io")(server, {
-  pingTimeout: 60000,
+  // pingTimeout: 60000,
   cors: {
     origin: "http://localhost:3000",
   },
 });
 io.on("connection", (socket) => {
-  socket.on("setup", (data) => {
-    socket.join("Room");
-    console.log("first");
+  console.log("connected");
+  socket.on("setup", (roomId) => {
+    console.log("setup done", roomId);
+    socket.join(roomId);
   });
-  socket.on("joinWith", (roomName) => {
-    socket.join(roomName);
+  socket.on("joinWith", (roomId) => {
+    console.log("joinWith");
+    console.log(roomId);
+    socket.join(roomId);
+  });
+  socket.on("newMessage", ({ roomId, data }) => {
+    console.log(roomId);
+    console.log("first");
     console.log(socket.rooms);
+    console.log(data);
+    io.to(roomId).emit("receivedMessage", data);
   });
 });

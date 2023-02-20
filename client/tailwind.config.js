@@ -7,8 +7,10 @@ module.exports = {
     },
     extend: {
       colors: {
-        main: "#20023e",
-        secondary: "#9d3cff",
+        main: "#BAD7DF",
+        secondary: "#ffe2e2",
+        open: "#99ddcc",
+        darkWhite: "#f6f6f6",
       },
       keyframes: {
         moveLeft: {
