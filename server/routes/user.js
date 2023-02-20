@@ -11,6 +11,7 @@ const {
   SendFollow,
   getCardInfo,
   postNewPost,
+  firstVisit,
 } = require("../controllers/userControllers");
 const { protect } = require("../utils/protect");
 
@@ -24,4 +25,5 @@ router.get("/search", protect, SearchUsers);
 router.get("/profile/:id", getUser);
 router.put("/profile/follow", protect, SendFollow);
 router.post("/createPost", protect, postNewPost);
+router.put("/firstVisit", protect, firstVisit);
 module.exports = router;
