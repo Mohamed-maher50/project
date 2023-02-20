@@ -26,7 +26,7 @@ const registerAuth = createAsyncThunk(
     }
   }
 );
-const initialState = JSON.parse(localStorage.getItem("userInfo")) || {};
+const initialState = JSON.parse(localStorage.getItem("userInfo")) || false;
 const userReducer = createSlice({
   name: "user",
   initialState: {
@@ -39,25 +39,17 @@ const userReducer = createSlice({
     },
   },
   extraReducers: {
-    [loginAuth.pending]: (state, { payload }) => {
-      console.log("pending");
-      console.log({ payload });
-    },
+    [loginAuth.pending]: (state, { payload }) => {},
     [loginAuth.fulfilled]: (state, { payload }) => {
-      console.log("fulfilled");
       localStorage.setItem("userInfo", payload);
       state.userData = JSON.parse(payload);
     },
-    [loginAuth.rejected]: (state, d) => {
-      console.log("rejected");
-    },
+    [loginAuth.rejected]: (state, d) => {},
     [registerAuth.pending]: (state) => {},
     [registerAuth.fulfilled]: (state, { payload }) => {
       localStorage.setItem("userInfo", payload);
     },
-    [registerAuth.rejected]: (state, { payload }) => {
-      console.log("ug");
-    },
+    [registerAuth.rejected]: (state, { payload }) => {},
   },
 });
 export default userReducer.reducer;

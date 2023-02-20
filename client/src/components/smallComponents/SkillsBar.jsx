@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { config } from "../../config";
@@ -37,11 +36,11 @@ function SkillsBar({ currentUser }) {
   if (!currentUser) return <>skilton</>;
   return (
     <>
-      <div className="text-center text-main rounded-lg p-3 w-full bg-white text-2xl capitalize  font-bold">
-        skills
+      <div className="text-center text-open rounded-lg p-3 w-full bg-white text-2xl capitalize  font-bold">
+        SKILLS
         {currentUser._id == user?._id ? (
           <i
-            className="fa-solid fa-pen-to-square ml-3 text-secondary cursor-pointer"
+            className="fa-solid fa-pen-to-square ml-3 text-open cursor-pointer"
             onClick={handler}
           ></i>
         ) : (

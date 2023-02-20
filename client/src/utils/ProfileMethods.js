@@ -7,14 +7,20 @@ export const PostRequest = async (URL, data, config) => {
     const res = await axios.post(URL, { data }, config);
     return [res.data, null];
   } catch (err) {
-    console.log(err);
+    return [null, err];
+  }
+};
+export const putRequest = async (URL, config) => {
+  try {
+    const res = await axios.put(URL, config);
+    return [res.data, null];
+  } catch (err) {
     return [null, err];
   }
 };
 export const getRequest = async (URL, config) => {
   try {
     const res = await axios.get(URL, config);
-    console.log(res);
     return [res.data, null];
   } catch (err) {
     return [null, err];

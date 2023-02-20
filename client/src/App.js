@@ -9,30 +9,46 @@ import Avatar from "./pages/Avatar";
 import "react-toastify/dist/ReactToastify.css";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Search from "./pages/Search";
 import React, { useEffect } from "react";
 import NavBar from "./components/NavBar";
-import io from "socket.io-client";
+
+import Chat_comp from "./components/chat/Chat_comp";
+import { addMessage, getSocket } from "./store/ChatReducer";
 var socket;
 export { socket };
 function App() {
+  const { chatsId, sockets } = useSelector((s) => s.chat);
   const { user } = useSelector((state) => state.user.userData);
+  const dispatch = useDispatch();
   const nav = useNavigate();
+
   useEffect(() => {
-    if (!user?._id) return nav("/login");
+    dispatch(getSocket());
   }, []);
   useEffect(() => {
-    socket = io("http://localhost:4000");
-    socket.emit("setup", "123");
-  }, [socket]);
+    if (!user) return nav("/login");
+  }, []);
+  useEffect(() => {
+    if (user && sockets) {
+      sockets.emit("setup", user._id);
+    }
+  });
+  useEffect(() => {
+    if (sockets)
+      sockets.on("receivedMessage", (data) => {
+        console.log(data);
+        dispatch(addMessage(data));
+      });
+  }, [sockets]);
   return (
-    <div className="App h-screen min-h-screen bg-[#140029]  overflow-auto">
+    <div className="App h-screen min-h-screen bg-secondary overflow-auto">
       <NavBar />
       <Routes>
         <Route path="/avatar" element={<Avatar />} />
 
-        {!user?._id ? (
+        {!user ? (
           <>
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
@@ -44,7 +60,10 @@ function App() {
             <Route path="/profile/:id" element={<Profile />} />
           </>
         )}
-      </Routes>
+      </Routes>{" "}
+      {chatsId.map((chat, index) => {
+        return <Chat_comp chat={chat} key={index} />;
+      })}
       <ToastContainer
         position="top-right"
         autoClose={5000}

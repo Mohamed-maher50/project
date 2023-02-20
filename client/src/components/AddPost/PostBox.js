@@ -31,9 +31,9 @@ function PostBox() {
     if (err) return;
   };
   return (
-    <div className=" w-full bg-secondary p-4 ">
-      <input
-        className="bg-gray-200 w-full outline-none p-24 rounded-md duration-700 placeholder:text-black font-bold text-main focus:p-4 "
+    <div className=" w-full bg-main shadow-lg shadow-white p-4 ">
+      <textarea
+        className="bg-[#fff] p-5 text-[#333] resize-none w-full outline-none rounded-md min-h-[200px] placeholder:text-open font-bold"
         placeholder="what you need ? "
         spellCheck="false"
         ref={title}
@@ -41,7 +41,7 @@ function PostBox() {
       <div className="grid grid-cols-3 gap-4 mt-3 text-main relative">
         <select
           defaultValue={"Programming"}
-          className="p-2 bg-main text-white "
+          className="p-2 bg-open text-white "
           ref={filed}
         >
           <option>Programming</option>
@@ -50,23 +50,28 @@ function PostBox() {
           <input
             placeholder="skills"
             ref={input}
-            className="w-full absolute h-full z-10 shadow-lg left-0 p-3 bg-main placeholder:text-white text-white text-lg capitalize"
+            className="w-full absolute h-full z-10 shadow-lg left-0 p-3 bg-open placeholder:text-white text-white text-lg capitalize"
           />
           <i
             onClick={addSkills}
             className="fa-solid fa-paper-plane z-20 absolute right-2 top-1 duration-500 hover:translate-x-3 hover:-translate-y-3 hover:text-2xl cursor-pointer text-xl text-white"
-          ></i>
+          >
+            f
+          </i>
         </div>
         <select
           defaultValue={true}
-          className="p-2 bg-main text-white "
+          className="p-2 bg-open text-white "
           placeholder="type"
           ref={type}
         >
-          <option value={"volunteer"} className="p-3 hover:bg-white font-bold ">
+          <option
+            value={"volunteer"}
+            className="p-3 bg-open hover:bg-white font-bold "
+          >
             volunteer
           </option>
-          <option value={"needy"} className="p-3 hover:bg-white">
+          <option value={"needy"} className="p-3 hover:bg-white bg-open">
             needy
           </option>
         </select>
@@ -84,7 +89,7 @@ function PostBox() {
         })}
       </div>
       <button
-        className="outline-btn hover:bg-main capitalize"
+        className="outline-btn hover:bg-open capitalize"
         onClick={handleSubmit}
       >
         submit

@@ -7,12 +7,17 @@ import "swiper/css";
 import "swiper/css/navigation";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { config } from "../config";
+import authConfig, { config } from "../config";
 function Avatar() {
   const [img, setImg] = useState([]);
   const [selectedAvatar, setSelectedAvatar] = useState("");
   const { user, token } = useSelector((state) => state.user.userData);
-
+  const handelFirstVisit = async () => {
+    const res = await axios.put(
+      "http://localhost:4000/firstVisit",
+      authConfig(token)
+    );
+  };
   const nav = useNavigate();
   const submitAvatar = async () => {
     try {
@@ -25,6 +30,7 @@ function Avatar() {
         config
       );
       localStorage.setItem("userInfo", data);
+      handelFirstVisit();
       nav("/home");
     } catch (err) {
       console.log(err);
@@ -34,7 +40,6 @@ function Avatar() {
     setSelectedAvatar(img[index.realIndex]);
   };
   useEffect(() => {
-    if (!user) nav("/login");
     if (user?.firstVisit === false) nav("/home");
     if (img.length === 0) {
       var imgs = [];
@@ -46,6 +51,9 @@ function Avatar() {
       setSelectedAvatar(imgs[0]);
       setImg(imgs);
     }
+    return () => {
+      handelFirstVisit();
+    };
   }, []);
 
   return (
