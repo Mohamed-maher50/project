@@ -44,7 +44,6 @@ function App() {
   }, [sockets]);
   return (
     <div className="App h-screen min-h-screen bg-secondary overflow-auto">
-      <NavBar />
       <Routes>
         <Route path="/avatar" element={<Avatar />} />
 

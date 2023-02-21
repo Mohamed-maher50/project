@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import authConfig, { config } from "../../config";
 import { PostRequest } from "../../utils/ProfileMethods";
 
-function PostBox() {
+function CreatePost() {
   const [skillSelected, setSkillsSelected] = useState([]);
 
   const input = useRef("");
@@ -98,4 +98,4 @@ function PostBox() {
   );
 }
 
-export default PostBox;
+export default CreatePost;

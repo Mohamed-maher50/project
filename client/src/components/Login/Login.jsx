@@ -5,7 +5,7 @@ import { validationForm } from "../../validate/ValidateForm";
 import InputForm from "../inputForm";
 import updateToken from "../../config";
 import { displayError } from "../../validate/displayError";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { loginAuth } from "../../store/user";
 const inputs = [
   {
@@ -56,14 +56,17 @@ function Login() {
     }
   };
   return (
-    <div className="h-full flex justify-center items-center bg-main">
+    <div className="h-full flex justify-center items-center bg-secondary">
       <form
-        className=" flex flex-col w-fit mx-auto p-10 pt-14 border-white border-4"
+        className=" flex flex-col w-fit mx-auto p-10 pt-14 border-white bg-open shadow-md shadow-open border-4"
         onSubmit={handleSubmit}
       >
         {inputs.map((inp) => {
           return <InputForm {...inp} key={inp.id} handler={handleChange} />;
         })}
+        <Link to={"/register"} className="underline text-darkWhite font-bold">
+          i don't have account
+        </Link>
         <button className="main-btn">Submit</button>
       </form>
     </div>

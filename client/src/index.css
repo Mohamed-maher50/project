@@ -10,7 +10,7 @@ input {
 @layer components {
   .main-btn {
     transition: 0.3s ease-in-out;
-    @apply py-2 px-7 bg-[#9d3cff] rounded-full
+    @apply py-2 px-7  rounded-full
       text-white mt-7 font-bold font-Josefin shadow-md;
   }
   .outline-btn {
@@ -23,8 +23,7 @@ input {
     @apply border-[#ffff];
   }
   .main-btn:hover {
-    background-color: aliceblue;
-    color: #9d3cff;
+    @apply text-open bg-white;
   }
   .icon-btn {
     @apply p-3 rounded-full cursor-pointer shadow-sm;

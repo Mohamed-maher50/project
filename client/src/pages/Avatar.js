@@ -76,7 +76,7 @@ function Avatar() {
                     src={img}
                     alt={`avatar${index}`}
                     width={"100%"}
-                    loading="lazy"
+                    loading="eager"
                   />
                 </SwiperSlide>
               );
