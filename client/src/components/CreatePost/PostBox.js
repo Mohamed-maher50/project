@@ -1,12 +1,14 @@
 import React, { useRef, useState } from "react";
 import { useSelector } from "react-redux";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import authConfig, { config } from "../../config";
 import { PostRequest } from "../../utils/ProfileMethods";
+import { checkLang } from "../../utils/isLang";
 
 function CreatePost() {
   const [skillSelected, setSkillsSelected] = useState([]);
-
+  const [dir, setDir] = useState(false);
   const input = useRef("");
   const type = useRef("");
   const title = useRef("");
@@ -17,7 +19,6 @@ function CreatePost() {
   };
   const { token } = useSelector((state) => state.user.userData);
   const handleSubmit = async () => {
-    console.log(title.current.value);
     const [data, err] = await PostRequest(
       "http://localhost:4000/createPost",
       {
@@ -30,13 +31,20 @@ function CreatePost() {
     );
     if (err) return;
   };
+  const langDir = (e) => {
+    if (checkLang(e.target.value) != dir) {
+      setDir(!dir);
+    }
+  };
   return (
-    <div className=" w-full bg-main shadow-lg shadow-white p-4 ">
+    <div className=" w-full rounded-lg bg-white shadow-sm shadow-white p-4 ">
       <textarea
-        className="bg-[#fff] p-5 text-[#333] resize-none w-full outline-none rounded-md min-h-[200px] placeholder:text-open font-bold"
+        className=" bg-gray-100 p-5 text-[#333] resize-none w-full outline-none rounded-md min-h-[200px] placeholder:text-open font-bold"
         placeholder="what you need ? "
         spellCheck="false"
         ref={title}
+        onChange={langDir}
+        dir={dir ? "rtl" : "ltr"}
       />
       <div className="grid grid-cols-3 gap-4 mt-3 text-main relative">
         <select
@@ -52,12 +60,11 @@ function CreatePost() {
             ref={input}
             className="w-full absolute h-full z-10 shadow-lg left-0 p-3 bg-open placeholder:text-white text-white text-lg capitalize"
           />
-          <i
+          <FontAwesomeIcon
+            icon={faPaperPlane}
             onClick={addSkills}
-            className="fa-solid fa-paper-plane z-20 absolute right-2 top-1 duration-500 hover:translate-x-3 hover:-translate-y-3 hover:text-2xl cursor-pointer text-xl text-white"
-          >
-            f
-          </i>
+            className="z-20 absolute right-2 top-1 duration-500 hover:scale-150 cursor-pointer text-xl text-white"
+          />
         </div>
         <select
           defaultValue={true}
@@ -76,12 +83,14 @@ function CreatePost() {
           </option>
         </select>
       </div>
-      <div className={`flex relative duration-1000 py-2 overflow-hidden `}>
+      <div
+        className={`flex relative flex-wrap duration-1000 py-2 overflow-hidden `}
+      >
         {skillSelected.map((sk, index) => {
           return (
             <span
               key={index}
-              className={` animate-waving-left mr-2 duration-1000 px-4 shadow-lg py-2 bg-neutral-100 text-main text-xl rounded-lg`}
+              className={`mt-3 animate-waving-left mr-2 duration-1000 px-4 shadow-lg py-2 bg-neutral-100 text-main text-xl rounded-lg`}
             >
               {sk}
             </span>
@@ -89,7 +98,7 @@ function CreatePost() {
         })}
       </div>
       <button
-        className="outline-btn hover:bg-open capitalize"
+        className="main-btn m-auto block bg-open capitalize"
         onClick={handleSubmit}
       >
         submit

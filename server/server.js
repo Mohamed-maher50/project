@@ -3,7 +3,9 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(require("cookie-parser")());
 const cors = require("cors");
-
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
+app.use("/avatar", express.static(__dirname + "/uploads/avatar"));
 app.use(
   cors({
     origin: "http://localhost:3000",

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getPosts } from "../../store/postReducer";
 import { PostRequest } from "../../utils/ProfileMethods";
-import Post from "../post/Post";
+import Post from "../ProfilePost";
 
 function PostContainer() {
   const dispatch = useDispatch();
@@ -17,11 +17,11 @@ function PostContainer() {
 
     getallPosts();
   }, []);
-
+  console.log(posts);
   return (
-    <div>
-      <Post />
-    </div>
+    <>
+      <Post posts={posts} />
+    </>
   );
 }
 

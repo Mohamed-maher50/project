@@ -1,88 +1,74 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper";
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-
+import React, { useEffect, useRef, useState } from "react";
+import { json, Link, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import "swiper/css";
 import "swiper/css/navigation";
 import axios from "axios";
-import { useSelector } from "react-redux";
-import authConfig, { config } from "../config";
+import { useDispatch, useSelector } from "react-redux";
+import authConfig from "../config";
+import { changeProfilePicture } from "../store/user";
 function Avatar() {
-  const [img, setImg] = useState([]);
-  const [selectedAvatar, setSelectedAvatar] = useState("");
+  const [img, setImg] = useState("/newUser.jpeg");
+  const imgInput = useRef("");
+  const dispatch = useDispatch();
   const { user, token } = useSelector((state) => state.user.userData);
   const handelFirstVisit = async () => {
     const res = await axios.put(
       "http://localhost:4000/firstVisit",
       authConfig(token)
     );
+    return res;
   };
   const nav = useNavigate();
-  const submitAvatar = async () => {
-    try {
-      const { data } = await axios.put(
-        "http://localhost:4000/avatar",
-        {
-          AvatarURL: selectedAvatar,
-          ...{ user, token },
-        },
-        config
-      );
-      localStorage.setItem("userInfo", data);
-      handelFirstVisit();
-      nav("/home");
-    } catch (err) {
-      console.log(err);
-    }
+  const submitAvatar = async (e) => {
+    e.preventDefault();
+    const form = new FormData();
+    form.append("avatar", imgInput.current.files[0]);
+    const status = dispatch(changeProfilePicture(form));
+    nav(`/`);
   };
-  const handleChange = (index) => {
-    setSelectedAvatar(img[index.realIndex]);
+  const handleUpload = (e) => {
+    let imgUrl = URL.createObjectURL(e.target.files[0]);
+    setImg(imgUrl);
   };
   useEffect(() => {
-    if (user?.firstVisit === false) nav("/home");
-    if (img.length === 0) {
-      var imgs = [];
-      for (var i = 0; i < 5; i++) {
-        imgs.push(
-          `https://api.multiavatar.com/${Math.round(Math.random() * 100)}.png`
-        );
-      }
-      setSelectedAvatar(imgs[0]);
-      setImg(imgs);
-    }
+    if (user?.firstVisit === false) nav("/");
     return () => {
       handelFirstVisit();
     };
   }, []);
+  const handleSkip = () => handelFirstVisit();
 
   return (
     <div className="h-screen flex justify-center items-center flex-col bg-main">
-      <div className=" border-white border-8  p-4 pt-6 flex flex-col items-center w-[25rem] rounded-md">
-        <div className="w-[150px] h-64">
-          <Swiper
-            spaceBetween={50}
-            slidesPerView={1}
-            modules={[Navigation]}
-            navigation
-            pagination={{ clickable: true }}
-            loop
-            onSlideChange={handleChange}
-          >
-            {img.map((img, index) => {
-              return (
-                <SwiperSlide key={index}>
-                  <img
-                    src={img}
-                    alt={`avatar${index}`}
-                    width={"100%"}
-                    loading="eager"
-                  />
-                </SwiperSlide>
-              );
-            })}
-          </Swiper>
-        </div>
+      <form
+        onSubmit={submitAvatar}
+        className=" border-white border-8  p-4 pt-6 flex flex-col items-center w-[25rem] rounded-md"
+      >
+        <label
+          htmlFor="userImg"
+          className="relative flex group w-32  h-32 my-6 cursor-pointer"
+        >
+          <img src={img} className=" rounded-full object-cover" />
+          <div className="w-full  scale-0 flex items-center justify-center group-hover:bg-white  duration-300 group-hover:scale-100 absolute rounded-full top-0 bottom-0 right-0   ">
+            <FontAwesomeIcon
+              icon={faEdit}
+              className={"text-open w-10 h-10 block"}
+            />
+          </div>
+        </label>
+        <input
+          id="userImg"
+          onChange={handleUpload}
+          ref={imgInput}
+          type={"file"}
+          className="hidden"
+          accept="image/png, image/gif, image/jpeg"
+        />
+        <h1>choose you avatar Image</h1>
         <div className="flex justify-between w-full">
           <button
             type="submit"
@@ -91,13 +77,13 @@ function Avatar() {
           >
             Submit
           </button>
-          <Link to={"/home"}>
-            <button type="submit" className="outline-btn   block ml-auto">
+          <Link to={`/`} onClick={handleSkip}>
+            <button type="submit" className="outline-btn block ml-auto">
               Skip
             </button>
           </Link>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

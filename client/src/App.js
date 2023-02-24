@@ -3,7 +3,7 @@ import { Route, Routes, useNavigate } from "react-router";
 import { ToastContainer } from "react-toastify";
 import "./App.css";
 import Login from "./components/Login/Login";
-import NotifcationNav from "./components/NotifcationNav/NotifcationNav";
+
 import Register from "./components/register/Register";
 import Avatar from "./pages/Avatar";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,10 +12,11 @@ import Profile from "./pages/Profile";
 import { useSelector, useDispatch } from "react-redux";
 import Search from "./pages/Search";
 import React, { useEffect } from "react";
-import NavBar from "./components/NavBar";
 
 import Chat_comp from "./components/chat/Chat_comp";
 import { addMessage, getSocket } from "./store/ChatReducer";
+import ToUp from "./components/toUp/ToUp";
+
 var socket;
 export { socket };
 function App() {
@@ -28,6 +29,7 @@ function App() {
     dispatch(getSocket());
   }, []);
   useEffect(() => {
+    console.log(user);
     if (!user) return nav("/login");
   }, []);
   useEffect(() => {
@@ -38,12 +40,11 @@ function App() {
   useEffect(() => {
     if (sockets)
       sockets.on("receivedMessage", (data) => {
-        console.log(data);
         dispatch(addMessage(data));
       });
   }, [sockets]);
   return (
-    <div className="App h-screen min-h-screen bg-secondary overflow-auto">
+    <div className="App h-screen min-h-screen bg-darkWhite overflow-auto">
       <Routes>
         <Route path="/avatar" element={<Avatar />} />
 
@@ -54,12 +55,12 @@ function App() {
           </>
         ) : (
           <>
-            <Route path="/home/:id" element={<Home user={user} />} />
+            <Route path="/" element={<Home user={user} />} />
             <Route path="/search" element={<Search />} />
             <Route path="/profile/:id" element={<Profile />} />
           </>
         )}
-      </Routes>{" "}
+      </Routes>
       {chatsId.map((chat, index) => {
         return <Chat_comp chat={chat} key={index} />;
       })}
@@ -75,6 +76,7 @@ function App() {
         pauseOnHover
         theme="dark"
       ></ToastContainer>
+      <ToUp />
     </div>
   );
 }

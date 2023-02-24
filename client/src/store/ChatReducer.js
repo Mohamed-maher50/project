@@ -15,7 +15,6 @@ const chatReducer = createSlice({
     pushToChat: (state, { payload }) => {
       let chatIsExist = state.chatsId.find((chat) => chat._id === payload._id);
       if (!chatIsExist) state.chatsId = [...state.chatsId, payload];
-      console.log(state.chatsId);
     },
     removeChat: (state, { payload }) => {
       let cloneChat = state.chatsId.filter((chat) => {

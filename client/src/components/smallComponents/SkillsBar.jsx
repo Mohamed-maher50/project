@@ -1,14 +1,17 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { config } from "../../config";
+
 import { PostRequest } from "../../utils/ProfileMethods";
 import { displayError } from "../../validate/displayError";
 import { SkillButton } from "../smallComponents/skillsButton";
+import { faCheck, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import Layout from "./Layout";
+import authConfig from "../../config";
 function SkillsBar({ currentUser }) {
   const [layout, setLayout] = useState(false);
   const [skillValue, setSkillValue] = useState("");
-  const { user } = useSelector((state) => state.user.userData);
+  const { user, token } = useSelector((state) => state.user.userData);
   const handleChange = (e) => {
     setSkillValue(e.target.value);
   };
@@ -21,7 +24,7 @@ function SkillsBar({ currentUser }) {
     const [data, err] = await PostRequest(
       "http://localhost:4000/addSkill",
       skillValue,
-      config
+      authConfig(token)
     );
     if (data) {
       currentUser.skills = JSON.parse(data).skills;
@@ -39,14 +42,15 @@ function SkillsBar({ currentUser }) {
       <div className="text-center text-open rounded-lg p-3 w-full bg-white text-2xl capitalize  font-bold">
         SKILLS
         {currentUser._id == user?._id ? (
-          <i
-            className="fa-solid fa-pen-to-square ml-3 text-open cursor-pointer"
+          <FontAwesomeIcon
             onClick={handler}
-          ></i>
+            icon={faPenToSquare}
+            className="ml-3 text-open cursor-pointer"
+          />
         ) : (
           ""
         )}
-        <div className="flex justify-center w-[400px] my-4 gap-2 flex-wrap">
+        <div className="flex justify-center w-full my-4 gap-2 flex-wrap">
           {currentUser?.skills.map((sk, index) => {
             return <SkillButton skill={sk} randomColor key={index} />;
           })}
@@ -60,8 +64,8 @@ function SkillsBar({ currentUser }) {
           value={skillValue}
         />
 
-        <button className="main-btn" onClick={submitSkill}>
-          <i className="fa-solid fa-check text-xl"></i>
+        <button className="main-btn bg-open" onClick={submitSkill}>
+          <FontAwesomeIcon icon={faCheck} className="" />
         </button>
       </Layout>
     </>

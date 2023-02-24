@@ -15,7 +15,7 @@ function SkillButton({ skill, randomColor }) {
       className={`mx-2 ${
         randomColor
           ? colors[Math.round(Math.random() * (colors.length - 1))]
-          : ""
+          : "bg-open"
       } capitalize text-white min-w-[80] text-base py-1 px-2 rounded-md  `}
     >
       {skill}
