@@ -1,13 +1,13 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { removeChat } from "../../store/ChatReducer";
 import { displayError } from "../../validate/displayError";
 
 function Chat_comp({ chat }) {
   const { sockets, chatsId } = useSelector((state) => state.chat);
   const { user } = useSelector((state) => state.user.userData);
-  console.log(chatsId);
 
   const dispatch = useDispatch();
   const chatValue = useRef("");
@@ -56,8 +56,6 @@ function Chat_comp({ chat }) {
       <div className="h-[250px] overflow-y-scroll bg-slate-200 my-2">
         {/* chat */}
         {chat.messages.map((ch, index) => {
-          console.log(ch.chatId == user._id);
-
           return (
             <div
               ref={boxChat}
@@ -98,7 +96,7 @@ function Chat_comp({ chat }) {
           onClick={sendMessage}
           className="outline-btn rounded-none border-none  m-0"
         >
-          <i className="fa-solid fa-paper-plane"></i>
+          <FontAwesomeIcon icon={faPaperPlane} />
         </button>
       </div>
     </div>

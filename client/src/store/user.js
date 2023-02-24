@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import authConfig from "../config";
 import { PostRequest } from "../utils/ProfileMethods";
 const loginAuth = createAsyncThunk(
   "user/login",
@@ -12,6 +13,7 @@ const loginAuth = createAsyncThunk(
     return data;
   }
 );
+
 const registerAuth = createAsyncThunk(
   "user/registerAuth",
   async (formData, { rejectWithValue }) => {
@@ -24,6 +26,30 @@ const registerAuth = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
+  }
+);
+export const changeProfilePicture = createAsyncThunk(
+  "user/changeProfilePicture",
+  async (payload, { getState }) => {
+    const { user, token } = getState().user.userData;
+
+    console.log(payload);
+    try {
+      const { data } = await axios.put(
+        "http://localhost:4000/avatar",
+        payload,
+
+        authConfig(token)
+      );
+      console.log(data);
+      return JSON.parse(data);
+    } catch (error) {
+      console.log(error);
+    }
+
+    // if (data) {
+    //   return JSON.parse(data);
+    // }
   }
 );
 const initialState = JSON.parse(localStorage.getItem("userInfo")) || false;
@@ -50,6 +76,14 @@ const userReducer = createSlice({
       localStorage.setItem("userInfo", payload);
     },
     [registerAuth.rejected]: (state, { payload }) => {},
+    [changeProfilePicture.pending]: (state, { payload }) => {
+      console.log(payload);
+    },
+    [changeProfilePicture.fulfilled]: (state, { payload }) => {
+      const { user } = payload;
+      state.userData.user = user;
+      localStorage.setItem("userInfo", JSON.stringify(state.userData));
+    },
   },
 });
 export default userReducer.reducer;

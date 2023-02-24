@@ -8,6 +8,7 @@ import { Provider } from "react-redux";
 import userReducer from "./store/user";
 import postReducer from "./store/postReducer";
 import ChatReducer from "./store/ChatReducer";
+
 const store = configureStore({
   reducer: {
     user: userReducer,

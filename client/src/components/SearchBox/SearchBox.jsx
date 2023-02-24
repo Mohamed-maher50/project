@@ -1,7 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 function SearchBox({ handleSearchBox }) {
   const token = JSON.parse(localStorage.getItem("userInfo"))?.token;
   const [searchResults, setSearchResults] = useState([]);
@@ -19,7 +20,7 @@ function SearchBox({ handleSearchBox }) {
   };
   return (
     <>
-      <div className="absolute w-fit right-0 top-0 py-4 z-50 px-2 rounded-md shadow bg-secondary text-gray-400 ">
+      <div className="absolute w-fit right-0 top-0 py-4 z-50 px-2 rounded-md shadow bg-open text-gray-400 ">
         <div className="flex items-center">
           <input
             type={"search"}
@@ -28,10 +29,11 @@ function SearchBox({ handleSearchBox }) {
             spellCheck={false}
             onChange={handleSearchValue}
           />
-          <i
-            className="fas fa-arrow-right text-2xl icon-btn text-white rounded-full ml-1  font-bold"
+          <FontAwesomeIcon
+            icon={faArrowRight}
             onClick={handleSearchBox}
-          ></i>
+            className="text-2xl icon-btn text-white rounded-full ml-1  font-bold"
+          />
         </div>
         <div className="text-center text-white font-bold text-xl">Result</div>
         <div>

@@ -7,6 +7,19 @@ button,
 input {
   font-family: "Josefin Sans";
 }
+::-webkit-scrollbar-thumb {
+  background-color: #9d3cff;
+  height: 100px;
+}
+::-webkit-scrollbar-track {
+  background-color: #0d1711f7;
+  width: 15px;
+}
+::-webkit-scrollbar {
+  background-color: #9d3cff;
+  width: 10px;
+}
+
 @layer components {
   .main-btn {
     transition: 0.3s ease-in-out;

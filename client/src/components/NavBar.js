@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import SearchBox from "./SearchBox/SearchBox";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass, faBell } from "@fortawesome/free-solid-svg-icons";
 function NavBar() {
   const { user } = useSelector((state) => state.user.userData);
   const [searchBox, setSearchBox] = useState(false);
@@ -13,18 +15,25 @@ function NavBar() {
   const UserActive = () => {
     return (
       <>
-        <Link to={"/notification"}>
-          <i className="fas fa-bell p-2 h-fit  cursor-pointer"></i>
+        <Link to={"/notification"} className="flex items-center">
+          <FontAwesomeIcon
+            onClick={handleSearchBox}
+            icon={faBell}
+            className="w-6 h-6  text-center"
+          />
         </Link>
-
-        <i
-          className="fas fa-search cursor-pointer  h-fit mx-1 p-2 rounded-full "
+        <FontAwesomeIcon
           onClick={handleSearchBox}
-        ></i>
-        <Link to={`/profile/${user?._id}`}>
-          <div className="w-14 h-14 rounded-full overflow-hidden cursor-pointer">
-            <img src={user?.AvatarUrl} alt="avatar" />
-          </div>
+          icon={faMagnifyingGlass}
+          className="cursor-pointer   mx-3 w-6 h-6  rounded-full "
+        />
+
+        <Link to={`/profile/${user?._id}`} className="">
+          <img
+            src={user?.AvatarUrl}
+            alt="avatar"
+            className="w-14 h-14 rounded-full object-cover"
+          />
         </Link>
       </>
     );
@@ -45,7 +54,7 @@ function NavBar() {
   return (
     <div className="w-full text-white bg-open">
       <div className=" container mx-auto flex py-2 px-5">
-        <Link to={`/home/${user?._id}`} className="flex items-center">
+        <Link to={`/`} className="flex items-center">
           <div className="w-14 h-14 rounded-full overflow-hidden flex">
             <img src="/logo1.png" alt="logo" className=" object-cover" />
           </div>

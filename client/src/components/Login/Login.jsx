@@ -47,7 +47,7 @@ function Login() {
         const { user } = JSON.parse(res.payload);
         displayError("👌 success", { type: "success", theme: "light" });
         if (user?.firstVisit === true) return nav("/avatar");
-        nav(`/home/${user._id}`);
+        nav(`/`);
       }
     } else {
       result.forEach((errMsg) => {

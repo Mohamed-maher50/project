@@ -7,29 +7,28 @@ import authConfig from "../../config";
 import { pushToChat } from "../../store/ChatReducer";
 import { getRequest, userAlreadyFollowing } from "../../utils/ProfileMethods";
 
-function ProfileCard() {
+function ProfileCard({ home }) {
   const { token, user } = useSelector((state) => state.user.userData);
   const { sockets, chatsId } = useSelector((state) => state.chat);
   const [cardInfo, setCardInfo] = useState(undefined);
-  console.log(cardInfo);
+
   const { id } = useParams();
   const dispatch = useDispatch();
   const sendMessage = () => {
     if (sockets) sockets.emit("joinWith", id);
     dispatch(pushToChat({ ...cardInfo, isActive: true, messages: [] }));
   };
-  useEffect(() => {}, [socket]);
   useEffect(() => {
     const getCardInfo = async () => {
-      const [data, err] = await getRequest(
-        `http://localhost:4000/profile/card/${id}`,
+      const [data] = await getRequest(
+        `http://localhost:4000/profile/card/${home ? user._id : id}`,
         authConfig(token)
       );
       if (data) setCardInfo(JSON.parse(data));
     };
 
     getCardInfo();
-  }, [id]);
+  }, [id, user]);
 
   const SendFollow = async () => {
     const { data } = await axios.put(
@@ -42,38 +41,40 @@ function ProfileCard() {
     setCardInfo(JSON.parse(data).data);
   };
 
-  if (!cardInfo) return <>loogin</>;
+  if (!cardInfo) return <>loading</>;
   const AlreadyFollowing = userAlreadyFollowing(cardInfo, user._id);
   return (
     <>
-      <div className="w-full ml-2 text-black relative bg-white rounded-lg p-3 shadow-md  shadow-darkWhite">
+      <div className="w-full p-2 border-white border-2 text-black relative bg-open rounded-lg shadow-md  shadow-darkWhite">
         <div className="flex items-center">
-          {id != user?._id && (
-            <button
-              className={`main-btn h-fit translate-x-14   ${
-                AlreadyFollowing
-                  ? "bg-blue-400 disabled  pointer-events-none"
-                  : " hover:mb-3 "
-              }`}
-              onClick={SendFollow}
-              disabled={AlreadyFollowing}
-            >
-              Follower
-            </button>
-          )}
+          {home ||
+            (id != user?._id && (
+              <button
+                className={`main-btn h-fit translate-x-14   ${
+                  AlreadyFollowing
+                    ? "bg-blue-400 disabled  pointer-events-none"
+                    : " hover:mb-3 "
+                }`}
+                onClick={SendFollow}
+                disabled={AlreadyFollowing}
+              >
+                Follower
+              </button>
+            ))}
 
           <img
             src={cardInfo?.AvatarUrl}
             className=" w-40 h-40  rounded-full mx-auto"
           />
-          {id != user?._id && (
-            <button
-              className="main-btn h-fit hover:mb-3 -translate-x-14"
-              onClick={sendMessage}
-            >
-              message
-            </button>
-          )}
+          {home ||
+            (id != user?._id && (
+              <button
+                className="main-btn h-fit hover:mb-3 -translate-x-14"
+                onClick={sendMessage}
+              >
+                message
+              </button>
+            ))}
         </div>
         <h4 className="text-center text-2xl  my-2 font-extralight text-black ">
           {cardInfo.fullName}
@@ -87,8 +88,8 @@ function ProfileCard() {
             <span className=" text-secondary">{cardInfo.followers.length}</span>
           </span>
           <span className="flex flex-col text-white shadow-lg items-center bg-open p-2 font-bold text-xl capitalize rounded-lg">
-            helpes
-            <span className=" text-white">0</span>
+            following
+            <span className=" text-white">{cardInfo.following.length}</span>
           </span>
           <span className="flex flex-col text-white  bg-open shadow-lg items-center  p-2 font-bold text-xl capitalize rounded-lg">
             Ranks

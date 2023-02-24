@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const { default: mongoose } = require("mongoose");
 const User = require("../model/useSchema");
 const protect = async (req, res, next) => {
+  console.log(req.body);
   var token = req.headers.authorization?.split(" ")[1];
   req.token = token;
 
@@ -22,7 +23,7 @@ const protect = async (req, res, next) => {
 
     next();
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.send("done");
   }
 };

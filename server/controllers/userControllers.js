@@ -5,7 +5,8 @@ const { isId } = require("../utils/protect");
 const Post = require("../model/Post");
 
 const Register = async (req, res) => {
-  const { firstName, lastName, email, password, confirmPassword } = req.body;
+  const { firstName, lastName, email, password, confirmPassword, city } =
+    req.body;
   try {
     if (!firstName || !lastName || !email || !password || !confirmPassword)
       return res.status(400).send({ msg: "please fill fields" });
@@ -51,18 +52,26 @@ const Login = async (req, res) => {
   }
 };
 const Avatar = async (req, res) => {
-  const { AvatarURL, user, token } = req.body;
+  if (!req.file) return res.status(500).json({ msg: "not choose" });
+  const imgUrl =
+    req.protocol + "://" + req.get("host") + "/avatar/" + req.file.filename;
+  console.log(imgUrl);
   try {
-    if (!AvatarURL) return res.status(400).send("not selected avatar image");
-    if (!user) return res.status(400).send("can't find this user");
-    const userExist = await User.findByIdAndUpdate(user._id, {
-      firstVisit: false,
-      AvatarUrl: AvatarURL,
-    });
-    userExist.password = undefined;
-    res.status(200).json(JSON.stringify({ user: userExist, token }));
+    const userExist = await User.findByIdAndUpdate(
+      req.userId,
+      {
+        $set: {
+          AvatarUrl: imgUrl,
+          firstVisit: false,
+        },
+      },
+      { new: true }
+    ).select("email firstVisit AvatarUrl fullName");
+    console.log(userExist);
+    res.status(200).json(JSON.stringify({ user: userExist }));
   } catch (error) {
-    res.status(400).json({ msg: "some error in avatar" });
+    console.log(error);
+    res.status(400).json(error);
   }
 };
 //
