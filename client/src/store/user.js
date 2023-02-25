@@ -1,19 +1,18 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import authConfig from "../config";
-import { PostRequest } from "../utils/ProfileMethods";
 const loginAuth = createAsyncThunk(
   "user/login",
   async (formData, { rejectWithValue }) => {
-    const [data, err] = await PostRequest(
+    console.log(formData);
+    const { data } = await axios.post(
       "http://localhost:4000/auth/login",
       formData
     );
-    if (!data) return rejectWithValue(err.response.data);
+    if (!data) return rejectWithValue(data.response);
     return data;
   }
 );
-
 const registerAuth = createAsyncThunk(
   "user/registerAuth",
   async (formData, { rejectWithValue }) => {
@@ -31,8 +30,8 @@ const registerAuth = createAsyncThunk(
 export const changeProfilePicture = createAsyncThunk(
   "user/changeProfilePicture",
   async (payload, { getState }) => {
-    const { user, token } = getState().user.userData;
-
+    const { user, token } = getState()?.user?.userData;
+    console.log(token);
     console.log(payload);
     try {
       const { data } = await axios.put(
@@ -73,6 +72,7 @@ const userReducer = createSlice({
     [loginAuth.rejected]: (state, d) => {},
     [registerAuth.pending]: (state) => {},
     [registerAuth.fulfilled]: (state, { payload }) => {
+      state.userData = JSON.parse(payload);
       localStorage.setItem("userInfo", payload);
     },
     [registerAuth.rejected]: (state, { payload }) => {},
@@ -81,6 +81,7 @@ const userReducer = createSlice({
     },
     [changeProfilePicture.fulfilled]: (state, { payload }) => {
       const { user } = payload;
+      console.log(payload);
       state.userData.user = user;
       localStorage.setItem("userInfo", JSON.stringify(state.userData));
     },
