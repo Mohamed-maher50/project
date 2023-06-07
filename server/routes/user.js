@@ -1,21 +1,6 @@
 const router = require("express").Router();
-const path = require("path");
-const multer = require("multer");
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    console.log(req.originalUrl);
-    if (req.originalUrl == "/avatar") return cb(null, "uploads/avatar");
-    cb(null, "uploads");
-  },
-  filename: function (req, file, cb) {
-    // console.log(req);
-    cb(null, file.originalname);
-  },
-});
-const upload = multer({ storage: storage });
+
 const {
-  Register,
-  Login,
   Avatar,
   addSkill,
   getSkills,
@@ -25,18 +10,68 @@ const {
   getCardInfo,
   postNewPost,
   firstVisit,
+  checkEmailExist,
+  deleteSkill,
+  getFriends,
+  UpRate,
 } = require("../controllers/userControllers");
 const { protect } = require("../utils/protect");
+const { body } = require("express-validator");
+const { verifyPassword } = require("../utils/hashPassword");
+const { Register, Login, verifyEmail } = require("../controllers/auth");
 
-router.post("/auth/register", Register);
-router.post("/auth/login", Login);
+router.post(
+  "/auth/register",
+  body("NationalID")
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage("NationalID is required"),
+  body("email")
+    .trim()
+    .normalizeEmail()
+    .not()
+    .custom(checkEmailExist)
+    .not()
+    .withMessage("this account already exist"),
+  body("fullName").trim().not().isEmpty().withMessage("fullName is required"),
+  body("birthDay")
+    .trim()
+    .not()
+    .isEmpty()
+    .isDate()
+    .withMessage("date is required"),
+  body("city").trim().not().isEmpty(),
+  body("password")
+    .isLength({ min: 7 })
+    .withMessage(" password should be at least 7 characters. ")
+    .not()
+    .isEmpty()
+    .trim()
+    .custom((password, { req }) => {
+      if (password != req.body.confirmPassword)
+        return Promise.reject("password not equal confirm password");
+      return true;
+    }),
+  Register
+);
+router.post(
+  "/auth/login",
+  body("email").isEmail().trim().normalizeEmail().custom(checkEmailExist),
+  body("password").custom(verifyPassword).withMessage("password wrong"),
+  Login
+);
 router.get("/profile/card/:id", protect, getCardInfo);
-router.put("/avatar", protect, upload.single("avatar"), Avatar);
-router.post("/addSkill", protect, addSkill);
-router.get("/getSkills", protect, getSkills);
 router.get("/search", protect, SearchUsers);
+router.get("/getSkills", protect, getSkills);
 router.get("/profile/:id", getUser);
-router.put("/profile/follow", protect, SendFollow);
+router.get("/getFriends", protect, getFriends);
+router.post("/addSkill", protect, addSkill);
 router.post("/createPost", protect, postNewPost);
+router.post("/done", UpRate);
+router.put("/avatar", protect, Avatar);
+router.put("/profile/follow", protect, SendFollow);
 router.put("/firstVisit", protect, firstVisit);
+router.delete("/deleteSkill/:id", protect, deleteSkill);
+router.get("/:id/verify/:token", verifyEmail);
 module.exports = router;

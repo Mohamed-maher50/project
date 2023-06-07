@@ -6,15 +6,11 @@ const Message = mongoose.model(
     {
       sender: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "Users",
       },
       content: {
         type: String,
         trim: true,
-      },
-      chat: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Chat",
       },
     },
     { timestamps: true }

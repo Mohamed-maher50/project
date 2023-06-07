@@ -1,65 +1,92 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
-import { removeChat } from "../../store/ChatReducer";
-import { displayError } from "../../validate/displayError";
+import { faPaperPlane, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { newMessage, removeChat } from "../../store/ChatReducer";
+import { displayMsg } from "../../validate/displayError";
+import sound1 from "../../sounds/sound1.mp3";
 
+import axios from "axios";
 function Chat_comp({ chat }) {
-  const { sockets, chatsId } = useSelector((state) => state.chat);
+  const { sockets } = useSelector((s) => s.socket);
   const { user } = useSelector((state) => state.user.userData);
-
+  const chatWith = chat.users?.find((u) => u._id != user._id);
   const dispatch = useDispatch();
   const chatValue = useRef("");
-  const boxChat = useRef("");
+  const boxChat = useRef();
 
-  const sendMessage = () => {
-    if (chatValue.current.value.trim() === "")
-      return displayError("please enter anything", { position: "top-right" });
-    if (sockets)
-      sockets.emit("newMessage", {
-        roomId: chat._id,
-        data: {
-          msg: chatValue.current.value,
-          avatarUrl: user.AvatarUrl,
-          chatId: chat._id,
-          username: user.fullName,
-          _id: user._id,
-        },
+  const sendMessage = async (e) => {
+    e.preventDefault();
+    console.log(chatWith);
+    try {
+      if (chatValue.current.value.trim() === "")
+        return displayMsg("please enter anything", { position: "top-right" });
+      const { data } = await axios.post(`/newMessage/${chat._id}`, {
+        content: chatValue.current.value,
       });
-  };
-  useEffect(() => {
-    // boxChat?.current?.scrollIntoView({
-    //   behavior: "smooth",
-    // });
-  }, [chatsId]);
+      console.log(data);
+      dispatch(
+        newMessage({
+          receiver: chatWith._id,
+          ...data,
+          chatId: chat._id,
+        })
+      );
 
+      if (sockets) {
+        sockets.emit("newMessage", {
+          receiver: chatWith._id,
+          ...data,
+          chatId: chat._id,
+          AvatarUrl: user.AvatarUrl,
+        });
+      }
+
+      chatValue.current.value = "";
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    boxChat?.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  });
+  if (!chatWith) return <></>;
   return (
-    <div
-      className={`absolute border-white border-2 p-2 shadow-md shadow-secondary right-5 bottom-5 w-96 flex flex-col bg-main text-white ${
+    <form
+      onSubmit={sendMessage}
+      className={`border-white border-2 p-2 shadow-md  mr-2 w-96 flex flex-col bg-white  ${
         chat.isActive ? "" : "hidden"
       }`}
     >
-      <div className="relative flex justify-end p-2 text-2xl">
-        <i
-          className="fa-solid fa-xmark text-white cursor-pointer duration-150 hover:text-secondary"
-          onClick={() => dispatch(removeChat(chat._id))}
-        ></i>
+      <div className="flex items-center bg-main p-2 shadow-md">
+        <div className="flex grow items-center justify-between  ">
+          <img
+            src={chatWith.AvatarUrl}
+            alt={chatWith.fullName}
+            className="w-10 h-10 rounded-full object-cover"
+          />
+          <h4 className="ml-2 text-xl capitalize font-Josefin">
+            {chatWith.fullName}
+          </h4>
+        </div>
+        <div className="relative flex justify-end p-2 text-2xl">
+          <FontAwesomeIcon
+            icon={faXmark}
+            onClick={() => dispatch(removeChat(chat._id))}
+            className="fa-solid fa-xmark  cursor-pointer duration-150 "
+          />
+        </div>
       </div>
-      <div className="flex items-center justify-between ">
-        <img src={chat.AvatarUrl} alt={chat.fullName} className="w-10 h-10" />
-        <h4 className="ml-2 text-xl capitalize font-Josefin">
-          {chat.fullName}
-        </h4>
-      </div>
+
       {/* box chats  */}
-      <div className="h-[250px] overflow-y-scroll bg-slate-200 my-2">
+      <div className="h-[250px] overflow-y-auto bg-main my-2">
         {/* chat */}
         {chat.messages.map((ch, index) => {
           return (
             <div
               ref={boxChat}
-              className={`p-2 flex flex-col font-Josefin font-bold `}
+              className={`p-2   flex flex-col font-Josefin font-bold `}
               key={index}
             >
               <div
@@ -70,17 +97,19 @@ function Chat_comp({ chat }) {
                 }`}
               >
                 <img
-                  src={ch.avatarUrl}
+                  src={chatWith.AvatarUrl}
                   alt=""
-                  className="mr-2 w-8 h-8 rounded-full"
+                  className="mr-2 w-8 h-8 rounded-full object-cover"
                 />
-                <span className="text-gray-700">{ch.username}</span>
+                <span className="">{ch.sender.fullName}</span>
               </div>
               <div
-                className={`bg-secondary text-white
-              p-3 ml-9  rounded-b-md ${ch._id != user._id ? "" : "text-end"}`}
+                className={` 
+              p-3 ml-9 bg-mainBlue rounded-b-md ${
+                ch._id != user._id ? "" : "text-end"
+              }`}
               >
-                <span className="">{ch.msg}</span>
+                <span className="text-white">{ch.content}</span>
               </div>
             </div>
           );
@@ -90,16 +119,16 @@ function Chat_comp({ chat }) {
         <input
           ref={chatValue}
           placeholder="type...."
-          className="h-10 w-full outline-none p-2 text-main"
+          className="h-10 w-full outline-none p-2 "
         />
         <button
-          onClick={sendMessage}
-          className="outline-btn rounded-none border-none  m-0"
+          type="submit"
+          className="main-btn px-5 rounded-none border-none  m-0"
         >
           <FontAwesomeIcon icon={faPaperPlane} />
         </button>
       </div>
-    </div>
+    </form>
   );
 }
 

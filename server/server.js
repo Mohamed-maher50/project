@@ -1,50 +1,70 @@
 const express = require("express");
 const app = express();
 app.use(express.urlencoded({ extended: true }));
-app.use(require("cookie-parser")());
 const cors = require("cors");
-const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
-app.use("/avatar", express.static(__dirname + "/uploads/avatar"));
+var morgan = require("morgan");
+app.use(express.json());
+
+app.use(express.text());
+morgan("tiny");
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: [
+      
+      "https://shopapp-8faf7.firebaseapp.com",
+      "https://canyou-6d6aa.web.app",
+      "http://localhost:3000",
+      "*"
+    ],
     credentials: true,
   })
 );
+
+app.use("/avatar", express.static(__dirname + "/uploads/avatar"));
+app.use(cors());
+
+const helmet = require("helmet");
+app.use(helmet());
+
+app.use(morgan("tiny"));
+
 require("dotenv").config();
 require("./db/connection");
-
+const PORT = process.env.PORT || 4000;
 //
-app.use(express.json());
-
+app.use("/courses", require("./routes/Courses"));
+app.use(require("./routes/ChatRoute"));
 app.use(require("./routes/user"));
 app.use(require("./routes/Postes"));
-const server = app.listen(process.env.PORT, () => {
+app.use("/notification", require("./routes/Notification"));
+app.use("/api", require("./routes/Requests"));
+app.use((req, res) => {
+  res.status(404).json({ msg: "not found this route" });
+});
+const server = app.listen(PORT, () => {
   console.log("listen in port 4000");
 });
 const io = require("socket.io")(server, {
-  // pingTimeout: 60000,
+  pingTimeout: 1000,
   cors: {
-    origin: "http://localhost:3000",
+    origin: "*",
   },
 });
+module.exports = {
+  io,
+};
+require("./socketRequests/socketRequest");
 io.on("connection", (socket) => {
-  console.log("connected");
-  socket.on("setup", (roomId) => {
-    console.log("setup done", roomId);
-    socket.join(roomId);
+  socket.on("setUpConnection", (id) => {
+    socket.join(id);
   });
-  socket.on("joinWith", (roomId) => {
-    console.log("joinWith");
-    console.log(roomId);
-    socket.join(roomId);
-  });
-  socket.on("newMessage", ({ roomId, data }) => {
-    console.log(roomId);
-    console.log("first");
-    console.log(socket.rooms);
+  socket.on("acceptRequest", (data) => {
     console.log(data);
-    io.to(roomId).emit("receivedMessage", data);
+    socket.emit("received");
+  });
+  socket.on("newMessage", (data) => {
+    socket.join(data.receiver);
+    socket.to(data.receiver).emit("receiveMessage", data);
+    socket.leave(data.receiver);
   });
 });
