@@ -1,15 +1,27 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
+import axios from "axios";
 import { io } from "socket.io-client";
 const getSocket = createAsyncThunk("chat/getSocket", async () => {
-  const socket = await io("http://localhost:4000");
+  //https://canyou.onrender.com/
+  const socket = await io("http://localhost:4000/");
   return socket;
 });
+export const getChatId = createAsyncThunk(
+  "chat/getChatId",
+  async (id, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(`chat/${id}`);
+      return data;
+    } catch (err) {
+      rejectWithValue(err);
+    }
+  }
+);
 
 const chatReducer = createSlice({
   name: "chat",
   initialState: {
-    chatsId: [],
-    sockets: false,
+    chats: [],
   },
   reducers: {
     pushToChat: (state, { payload }) => {
@@ -17,34 +29,27 @@ const chatReducer = createSlice({
       if (!chatIsExist) state.chatsId = [...state.chatsId, payload];
     },
     removeChat: (state, { payload }) => {
-      let cloneChat = state.chatsId.filter((chat) => {
+      let cloneChat = state.chats.filter((chat) => {
         return chat._id !== payload;
       });
-      state.chatsId = cloneChat;
+      state.chats = cloneChat;
     },
-    addMessage: (state, { payload }) => {
-      let chatIndex = state.chatsId.findIndex(
-        (ch) => ch._id === payload.chatId
-      );
-      if (chatIndex > -1) {
-        state.chatsId[chatIndex].messages.push(payload);
-        return;
-      }
-
-      let chatSchema = {
-        isActive: true,
-        _id: payload.chatId,
-        messages: [payload],
-      };
-      state.chatsId.push(chatSchema);
+    newMessage: (state, { payload }) => {
+      let findIndexOfChat = state.chats.findIndex(function (ch) {
+        return ch._id == payload.chatId;
+      });
+      if (findIndexOfChat > -1)
+        state.chats[findIndexOfChat].messages.push(payload);
     },
   },
   extraReducers: {
-    [getSocket.fulfilled]: (state, { payload }) => {
-      state.sockets = payload;
+    [getChatId.fulfilled]: (state, { payload }) => {
+      const checkExist = state.chats.findIndex((cht) => cht._id == payload._id);
+      if (checkExist < 0)
+        state.chats = [...state.chats, { ...payload, isActive: true }];
     },
   },
 });
-export { getSocket };
+
 export default chatReducer.reducer;
-export const { pushToChat, removeChat, addMessage } = chatReducer.actions;
+export const { pushToChat, removeChat, newMessage } = chatReducer.actions;

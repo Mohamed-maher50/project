@@ -3,14 +3,16 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     fontFamily: {
-      Josefin: "Josefin Sans",
+      rob: "Roboto",
     },
     extend: {
       colors: {
-        main: "#BAD7DF",
-        secondary: "#ffe2e2",
-        open: "#99ddcc",
+        main: "#FAFAFB",
+        secondary: "#0e9507b3",
+
         darkWhite: "#f6f6f6",
+        mainColor: "#2B2B3A",
+        mainBlue: "#0075ff",
       },
       keyframes: {
         moveLeft: {

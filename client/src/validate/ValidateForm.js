@@ -3,16 +3,11 @@ export const validationForm = (type, data) => {
   var flagError = true;
 
   if (type === "register") {
-    if (data.confirmPassword !== data.password) {
+    if (data?.confirmPassword !== data.password) {
       errors.push("confirm password not equal password");
       flagError = false;
     }
-    if (
-      data.confirmPassword.trim() === "" ||
-      data.password.trim() === "" ||
-      data.firstName.trim() === "" ||
-      data.lastName.trim() === ""
-    ) {
+    if (data.confirmPassword?.trim() === "" || data.password.trim() === "") {
       errors.push("please enter filed");
       flagError = false;
       return errors;
