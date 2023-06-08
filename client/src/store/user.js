@@ -19,6 +19,7 @@ const registerAuth = createAsyncThunk(
     }
   }
 );
+
 export const changeProfilePicture = createAsyncThunk(
   "user/changeProfilePicture",
   async (payload, { getState }) => {
@@ -31,12 +32,18 @@ export const changeProfilePicture = createAsyncThunk(
   }
 );
 
+export const verifiyResetCode = createAsyncThunk("/verifiy" , async(resetCode)=>{
+  return axios.post("auth/verify" , {resetCode})
+  .then(res => res.data).catch(err => err.response.data)
+})
+
 const initialState = JSON.parse(localStorage.getItem("userInfo")) || false;
 
 const userReducer = createSlice({
   name: "user",
   initialState: {
     userData: initialState,
+    isloading:false
   },
   reducers: {
     updateUser: (state, { payload }) => {
@@ -68,6 +75,14 @@ const userReducer = createSlice({
       state.userData.user = user;
       localStorage.setItem("userInfo", JSON.stringify(state.userData));
     },
+
+    [verifiyResetCode.pending]:(state , action)=>{
+      state.isloading = true 
+    },
+    [verifiyResetCode.fulfilled]:(state , action)=>{
+      state.isloading = false 
+      state.userverifiy = action.payload
+    }
   },
 });
 export default userReducer.reducer;

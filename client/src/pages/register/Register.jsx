@@ -10,32 +10,31 @@ import { inputs } from "./inputs";
 import Select from "react-select";
 import InputForm from "../../components/inputForm";
 import citys from "../../components/citys";
+
+
 function Register() {
   const nav = useNavigate();
-  const [formData, setFormData] = useState({
-    fullName: "",
-    birthDay: "",
-    email: "",
-    password: "",
-    city: "Cairo",
-    confirmPassword: "",
-    NationalID: "",
-  });
+  const [formData, setFormData] = useState({  fullName: "",  birthDay: "",  email: "",  password: "",  city: "Cairo",  confirmPassword: "",  NationalID: "",});
   const dispatch = useDispatch();
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     let result = validationForm("register", formData);
+
     if (result == true) {
       const res = await dispatch(registerAuth(formData));
       if (res.error) return displayMsg(res.payload);
+
       displayMsg(" success", { type: "success", theme: "light" });
-      nav("/verifyInformation");
+      nav("/user/verifiy");
     } else {
       result.forEach((errMsg) => {
         displayMsg(errMsg);
       });
     }
   };
+  
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,

@@ -24,6 +24,10 @@ import EnrollCourse from "./pages/EnrollCourse";
 import ToUp from "./components/toUp/ToUp";
 import VerifyEmail from "./pages/VerifyEmail";
 import InformationVerification from "./pages/InformationVerification";
+import VerifiyAccount from "./utils/Verifiy/VerifiyAccount";
+
+
+
 function App() {
   const { user } = useSelector((state) => state.user.userData);
   const { sockets } = useSelector((state) => state.socket);
@@ -37,103 +41,36 @@ function App() {
   return (
     <div className="App h-screen min-h-screen bg-main overflow-auto ">
       <Routes>
-        <Route
-          path="/verifyInformation"
-          element={<InformationVerification />}
-        />
+            <Route path="user/verifiy" element={< VerifiyAccount/>} />
+            <Route path="/verifyInformation" element={<InformationVerification />}/>
 
-        <Route
-          path="/requests"
-          element={
-            <AuthRoute>
-              <Requests />
-            </AuthRoute>
-          }
-        />
-        <Route
-          path="/courses"
-          element={
-            <AuthRoute>
-              <Courses />
-            </AuthRoute>
-          }
-        />
-        <Route
-          path="/course/Enroll/:id"
-          element={
-            <AuthRoute>
-              <EnrollCourse />
-            </AuthRoute>
-          }
-        />
-        <Route
-          path="/courses/view/:id"
-          element={
-            <AuthRoute>
-              <ViewCourse />
-            </AuthRoute>
-          }
-        />
-        <Route
-          path="/avatar"
-          element={
-            <AuthRoute>
-              <Avatar />
-            </AuthRoute>
-          }
-        />
+            <Route path="/requests" element={ <AuthRoute> <Requests /></AuthRoute>  }/>
 
-        <Route
-          path="courses/create/playlist"
-          element={
-            <AuthRoute>
-              <CreatePlayList />
-            </AuthRoute>
-          }
-        />
-        <Route
-          path="/courses/dashboard"
-          element={
-            <AuthRoute>
-              <CoursesDashboard />
-            </AuthRoute>
-          }
-        />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route
-          path="/"
-          element={
-            <AuthRoute>
-              <Home user={user} />
-            </AuthRoute>
-          }
-        />
-        <Route
-          path="/profile/:id"
-          element={
-            <AuthRoute>
-              <Profile />
-            </AuthRoute>
-          }
-        />
-        <Route path="users/:id/verify/:token" element={<VerifyEmail />}></Route>
+            <Route path="/courses" element={ <AuthRoute> <Courses /> </AuthRoute> } />
+
+            <Route path="/course/Enroll/:id" element={   <AuthRoute>     <EnrollCourse />   </AuthRoute> } />
+
+            <Route  path="/courses/view/:id"  element={    <AuthRoute>      <ViewCourse />    </AuthRoute>  }/>
+            
+            <Route  path="/avatar"  element={    <AuthRoute>      <Avatar />    </AuthRoute>  }/>
+
+            <Route  path="courses/create/playlist"  element={    <AuthRoute>      <CreatePlayList />    </AuthRoute>  }/>
+            
+            <Route  path="/courses/dashboard"  element={    <AuthRoute>      <CoursesDashboard />    </AuthRoute>  }/>
+          
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            
+            <Route  path="/"  element={    <AuthRoute>      <Home user={user} />    </AuthRoute>  }/>
+            <Route  path="/profile/:id"  element={    <AuthRoute>      <Profile />    </AuthRoute>  }/>
+
+            <Route path="users/:id/verify/:token" element={<VerifyEmail />}></Route>
       </Routes>
+
+
       <Chats />
       <Errors />
-      <ToastContainer
-        position="top-right"
-        autoClose={1000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        limit={4}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      ></ToastContainer>
+      <ToastContainer   position="top-right"   autoClose={1000}   hideProgressBar={true}   newestOnTop={false}   closeOnClick   rtl={false}   limit={4}   pauseOnFocusLoss   draggable   pauseOnHover   theme="dark" ></ToastContainer>
       <Layout />
       <ToUp />
     </div>

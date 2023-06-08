@@ -11,12 +11,15 @@ const sendMail = async (email, subject, text) => {
         pass: "pomaysxutbgrwgow",
       },
     });
+
+
     await transporter.sendMail({
       from: "mohamedmaher.mm330@gmail.com",
       to: email,
       subject,
       text,
     });
+    
     console.log("email send successfully");
   } catch (error) {
     console.log(error);
