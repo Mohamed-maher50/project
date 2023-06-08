@@ -7,7 +7,7 @@ const {_Sendmail}  = require("../utils/_Sendmail")
 const { sendMail, genURL } = require("../utils/SendMail");
 const { genToken } = require("../utils/genToken");
 const { hastPassword } = require("../utils/hashPassword");
-
+const bcrypt = require("bcryptjs")
 
 
 // 2) Edite 
@@ -21,7 +21,7 @@ const Register = async (req, res) => {
 
     const data = await User.create({
        ...req.body, 
-      password :  await hastPassword(req.body.password) ,
+      
       passwordResetCode     : hashedResetCode,
       passwordResetExpire   : Date.now() + 10 * 60 * 1000,
       passwordResetverified : false
@@ -64,16 +64,18 @@ const VerifieResetCode = async(req , res , next )=>{
 
 
 
-const Login = async (req, res) => {
+const Login = async (req, res , next) => {
   const error = validationResult(req);
 
   if (!error.isEmpty()) return res.status(400).json(error);
-  
   try {
+
     if (!req.body.user) return res.status(401).json({ error: "ldkf" });
+
     var { email, AvatarUrl, fullName, id, _id, firstVisit, city } =
-      req.body.user;
+    req.body.user;
     const token = await jwt.sign(id, process.env.SECRET_KEY_JWT);
+
     return res.status(201).json({
       user: {
         email,

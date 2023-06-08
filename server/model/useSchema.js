@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema(
   {
     fullName: {  type: String,  required: [true, "Full Name"],  trim: true,},
     NationalID: {  type: String,  required: [true, "National ID"],  trim: true,  max: 11,  min: 11,},
-    email: {  type: String,  unique: true,  required: [true, "email"],  trim: true,  validate: [isEmail, "invalid email"],},
+    email: {  type: String,  unique: true,  required: [true, "email"],   validate: [isEmail, "invalid email"],},
     password: {  type: String,  required: [true, "password"],},
     firstVisit: {  type: Boolean,  default: true,},
     AvatarUrl: {  type: String,  default:    "https://cdn.pixabay.com/photo/2016/11/18/23/38/child-1837375_960_720.png",},
